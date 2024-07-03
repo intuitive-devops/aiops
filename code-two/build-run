@@ -7,3 +7,5 @@ docker run -it --name demo demo
 docker run -it -v config:/animals/config animals
 
 dotnet buildvc
+
+docker build . --file Dockerfile --tag cartheur/network-noise:latest
