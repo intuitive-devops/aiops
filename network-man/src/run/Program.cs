@@ -1,6 +1,7 @@
 ﻿using System;
 using NetTools;
 using System.Net;
+using System.Collections.Frozen;
 
 namespace run
 {
@@ -27,7 +28,7 @@ namespace run
             Console.WriteLine(" CIDR: " + RangeB.ToCidrString()); // is 192.168.0.0/24
 
             Console.WriteLine("Probe completed.");
-            Console.Readline();
+            Console.ReadLine();
         }
     }
 }
