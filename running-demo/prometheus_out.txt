@@ -1,0 +1,79 @@
+Sample out from Prometheus with localhost/metrics API call
+
+# HELP process_cpu_seconds_total Total user and system CPU time spent in seconds.
+# TYPE process_cpu_seconds_total counter
+process_cpu_seconds_total 0.21875
+# HELP should_not_show_up 
+# TYPE should_not_show_up gauge
+# HELP process_virtual_memory_bytes Virtual memory size in bytes.
+# TYPE process_virtual_memory_bytes gauge
+process_virtual_memory_bytes 211947520
+# HELP process_num_threads Total number of threads
+# TYPE process_num_threads gauge
+process_num_threads 24
+# HELP myCounter help text
+# TYPE myCounter counter
+myCounter 1
+myCounter{method="GET",endpoint="/"} 3
+myCounter{method="POST",endpoint="/cancel"} 1
+# HELP always_zero This counter is always zero but still needs to be present in the output!
+# TYPE always_zero counter
+always_zero 0
+# HELP dotnet_total_memory_bytes Total known allocated memory
+# TYPE dotnet_total_memory_bytes gauge
+dotnet_total_memory_bytes 1173468
+# HELP dotnet_collection_count_total GC collection count
+# TYPE dotnet_collection_count_total counter
+dotnet_collection_count_total{generation="0"} 0
+dotnet_collection_count_total{generation="1"} 0
+dotnet_collection_count_total{generation="2"} 0
+# HELP beforecollect_async_example This counter is incremented before every data collection, but asynchronously.
+# TYPE beforecollect_async_example counter
+beforecollect_async_example 13751
+# HELP process_start_time_seconds Start time of the process since unix epoch in seconds.
+# TYPE process_start_time_seconds gauge
+process_start_time_seconds 1663850066.99118
+# HELP myHistogram help text
+# TYPE myHistogram histogram
+myHistogram_sum 0.682286474147014
+myHistogram_count 2
+myHistogram_bucket{le="0"} 0
+myHistogram_bucket{le="0.2"} 0
+myHistogram_bucket{le="0.4"} 2
+myHistogram_bucket{le="0.6"} 2
+myHistogram_bucket{le="0.8"} 2
+myHistogram_bucket{le="0.9"} 2
+myHistogram_bucket{le="+Inf"} 2
+# HELP process_open_handles Number of open handles
+# TYPE process_open_handles gauge
+process_open_handles 495
+# HELP process_private_memory_bytes Process private memory size
+# TYPE process_private_memory_bytes gauge
+process_private_memory_bytes 18358272
+# HELP myTimedHistogram help text
+# TYPE myTimedHistogram histogram
+myTimedHistogram_sum 0
+myTimedHistogram_count 0
+myTimedHistogram_bucket{le="0"} 0
+myTimedHistogram_bucket{le="0.2"} 0
+myTimedHistogram_bucket{le="0.4"} 0
+myTimedHistogram_bucket{le="0.6"} 0
+myTimedHistogram_bucket{le="0.8"} 0
+myTimedHistogram_bucket{le="0.9"} 0
+myTimedHistogram_bucket{le="+Inf"} 0
+# HELP beforecollect_example This counter is incremented before every data collection.
+# TYPE beforecollect_example counter
+beforecollect_example 1
+# HELP mySummary help text
+# TYPE mySummary summary
+mySummary_sum 6.09423163868218
+mySummary_count 2
+# HELP latestGauge Reports the latest cycle time
+# TYPE latestGauge gauge
+latestGauge 0
+# HELP process_working_set_bytes Process working set
+# TYPE process_working_set_bytes gauge
+process_working_set_bytes 33910784
+# HELP gauge help text
+# TYPE gauge gauge
+gauge 2.90294130980174

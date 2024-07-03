@@ -1,0 +1,58 @@
+September 2022
+Project Notes for Ai-Ops demo at DUO
+
+18.09.2022
+    1406: Project basics are assembled and building. Need to change-out the core and get it chewing data from prometheus, even if it is sample. Develop the money!
+19.09.2022
+    1138: A stable code-base has been created.
+    1239: However the IDE is pretty shitty.
+    1255: Have a framework 4.8 version here so I can at least develop the solution.
+    1355: The whirl is implemented and has a specific lifetime. Like and an improvement on the haden implementation.
+    1529: Working between VS2022 and Code I am getting to the point. The settings are now being loaded from a file and it is working - testing for the lifespan and what is the last statement of an agent that has expired.
+    1548: It works. The mechanics of the machine are done.
+    1621: Build the noise container as a separate dockerfile, then attach like: https://linuxize.com/post/how-to-connect-to-docker-container/
+    1652: A solid design plan in-hand and a working whirl. The docker commands and orchestration of the workflow is the next big challenge.
+    1723: Tomorrow: Begin with docker-compose up for the trinity and go from there. https://prometheus.io/docs/guides/cadvisor/#monitoring-docker-container-metrics-using-cadvisor
+    1759: Created the noise project and have a method that generates noise. Numbers, of course. What to do about it? It's here nevertheless.
+20.09.2022
+    1119: Funny how from yesterday to today I have lost the particulars of this project. It could be because I was polishing KeepOn.
+    1123: With docker-compose up in the scripts directory, the system will launch.
+22.09.2022
+    1048: Did a sanity check following last-evening's success at launching a docker remote-daemon container. The possibilities are so mind-boggling that I am having trouble keeping straight. But a C# control using Process works smoothly running docker or docker-compose commands from the Task class of the Whirl. :-)_
+    1050: The backside workflow is done.
+    1641: We are now returning single-line metric data via docker container stats. Parse and fill a dataset.
+    1658: This has been achieved.
+23.09.2022
+    1136: The ai needs to be sorted and the (newly added) Automat project will aid in a clean development surface. The noise container idea is now using different intensities of computations to trigger CPU and Memory.
+    1230: I've a basic matrix computation implemented that I have passed into the container project. The number of iterations will be the control vector.
+26.09.2022
+    1012: Am occupied with cleaning duties and will workout what is possible. Zen is the order of the day.
+    1722: Not much. Tomorrow beckons.
+27.09.2022
+    906: Beginning this morning, I will make a list of how the demonstration of my concept should be conducted.
+    #! -- The flow of the demow -- Just might be Sci-Fi -- !#
+    x. Review of concept and description of what is to be shown. (m.e) In Visual Studio 2022 as ease of development of Linux-based containerization target. Leverage debain-bazel to trigger builds of images based on configuration parameters. Configuration file to pass settings when agent begins. Can pass stored weight values to a newly-created and untrained (sub) agent. Agents can "talk" with each other using a NLP, to mitigate complexity of structured transcript files containing what was said and what was heard by an agent. This aids learning and growth.
+    0. Possible to run sanity checks ahead of deployment (automated/operator)
+    1. docker-compose up (yml file with containers to be examined) - or - docker run ... (operator)
+        a. noise
+        b. aiTest
+    2. Launch the C# program Cartheur.Demo (operator)
+    3. Graphic of data from the container (operator)
+    4. Training (agent)
+    5. Solution (agent)
+    x. Decision (operator)
+    x. Create new container (agent)
+    x. How to apply the new settings? Toward extra-credit, this is about Ai with a direction toward Ops, given the limited time.
+    x. Review of algorithm, graphic of data from Xms and the storage system.
+    x. Q & A
+    1238: Did I just hear correctly of an impetus to demo TwoAeonsTalking from Shell 2017?
+    1. docker engine on | Show containers for Prom, etc. not used
+    2. Run Cartheur.Demo agent for a lifespan (settings.xml).
+    3. Use the analytical tool (GUI)
+    4. Demo using other kinds of data
+    5. Confident? Set the bool to true in Settings.xml
+    6. Rerun Cartheur.Demo agent for a lifespan
+    7. Click yes when asked in the console
+    8. Watch container go down and new one come up (docker engine)
+29.09.2022
+    1517: It went fine. Demo accomplished.

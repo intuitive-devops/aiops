@@ -1,0 +1,19 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <ItemGroup>
+    <ProjectReference Include="..\bph\bph.csproj" />
+    <ProjectReference Include="..\encog\encog.csproj" />
+
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="encog-dotnet-core" Version="3.4.0" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+  </ItemGroup>
+
+  <PropertyGroup>
+    <AssemblyVersion>2.1.5</AssemblyVersion>
+    <TargetFramework>net7.0</TargetFramework>
+  </PropertyGroup>
+
+</Project>

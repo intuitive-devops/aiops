@@ -1,0 +1,2 @@
+docker build -t network-noise .
+docker run -it --name network-noise network-noise --config config.json -p 8080:80

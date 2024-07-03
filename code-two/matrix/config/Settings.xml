@@ -1,0 +1,6 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<root>
+  <item name="cpu" value="10"/><!-- in percent -->
+  <item name="memory" value="64"/><!-- in MB -->
+  <item name="logfile" value="logs"/>
+</root>

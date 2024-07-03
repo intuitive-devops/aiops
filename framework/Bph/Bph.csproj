@@ -1,0 +1,215 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{D7BE9C79-B103-4CC8-A1BE-6C7278763BB3}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Bph</RootNamespace>
+    <AssemblyName>Bph</AssemblyName>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <Deterministic>true</Deterministic>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Xml.Linq" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="AeonTagHandlers\Bot.cs" />
+    <Compile Include="AeonTagHandlers\Condition.cs" />
+    <Compile Include="AeonTagHandlers\Date.cs" />
+    <Compile Include="AeonTagHandlers\Formal.cs" />
+    <Compile Include="AeonTagHandlers\Gender.cs" />
+    <Compile Include="AeonTagHandlers\Get.cs" />
+    <Compile Include="AeonTagHandlers\Gossip.cs" />
+    <Compile Include="AeonTagHandlers\Id.cs" />
+    <Compile Include="AeonTagHandlers\Input.cs" />
+    <Compile Include="AeonTagHandlers\Learn.cs" />
+    <Compile Include="AeonTagHandlers\Lowercase.cs" />
+    <Compile Include="AeonTagHandlers\Person.cs" />
+    <Compile Include="AeonTagHandlers\Person2.cs" />
+    <Compile Include="AeonTagHandlers\Piglatin.cs" />
+    <Compile Include="AeonTagHandlers\Random.cs" />
+    <Compile Include="AeonTagHandlers\Script.cs" />
+    <Compile Include="AeonTagHandlers\Sentence.cs" />
+    <Compile Include="AeonTagHandlers\Set.cs" />
+    <Compile Include="AeonTagHandlers\Size.cs" />
+    <Compile Include="AeonTagHandlers\Sr.cs" />
+    <Compile Include="AeonTagHandlers\Srai.cs" />
+    <Compile Include="AeonTagHandlers\Star.cs" />
+    <Compile Include="AeonTagHandlers\System.cs" />
+    <Compile Include="AeonTagHandlers\Test.cs" />
+    <Compile Include="AeonTagHandlers\That.cs" />
+    <Compile Include="AeonTagHandlers\ThatStar.cs" />
+    <Compile Include="AeonTagHandlers\Think.cs" />
+    <Compile Include="AeonTagHandlers\TopicStar.cs" />
+    <Compile Include="AeonTagHandlers\Uppercase.cs" />
+    <Compile Include="AeonTagHandlers\Version.cs" />
+    <Compile Include="Boagaphish\ActivationFunctions\BipolarSigmoidFunction.cs" />
+    <Compile Include="Boagaphish\ActivationFunctions\GaussianFunction.cs" />
+    <Compile Include="Boagaphish\ActivationFunctions\IActivationFunction.cs" />
+    <Compile Include="Boagaphish\ActivationFunctions\SigmoidFunction.cs" />
+    <Compile Include="Boagaphish\ActivationFunctions\ThresholdFunction.cs" />
+    <Compile Include="Boagaphish\ActivationFunctions\VanderPolFunction.cs" />
+    <Compile Include="Boagaphish\Controls\BufferedPanel.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Boagaphish\Controls\Chart.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Boagaphish\Controls\ChartSingle.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Boagaphish\Core\Animals\BackPropagation.cs" />
+    <Compile Include="Boagaphish\Core\Animals\BackPropagationNetwork.cs" />
+    <Compile Include="Boagaphish\Core\Animals\Cell.cs" />
+    <Compile Include="Boagaphish\Core\Animals\Gaussian.cs" />
+    <Compile Include="Boagaphish\Core\Decision\Decider.cs" />
+    <Compile Include="Boagaphish\Core\Dendrites\Dendrite.cs" />
+    <Compile Include="Boagaphish\Core\Extensions.cs" />
+    <Compile Include="Boagaphish\Core\Layers\ActivationLayer.cs" />
+    <Compile Include="Boagaphish\Core\Layers\DistanceLayer.cs" />
+    <Compile Include="Boagaphish\Core\Layers\Layer.cs" />
+    <Compile Include="Boagaphish\Core\Learning\BackPropagation.cs" />
+    <Compile Include="Boagaphish\Core\Learning\DeltaRule.cs" />
+    <Compile Include="Boagaphish\Core\Learning\ElasticNetwork.cs" />
+    <Compile Include="Boagaphish\Core\Learning\ISupervised.cs" />
+    <Compile Include="Boagaphish\Core\Learning\IUnsupervised.cs" />
+    <Compile Include="Boagaphish\Core\Learning\Perceptron.cs" />
+    <Compile Include="Boagaphish\Core\Learning\SelfOrganizingMap.cs" />
+    <Compile Include="Boagaphish\Core\Lobes\LobeGenome.cs" />
+    <Compile Include="Boagaphish\Core\Lobes\LobeProperties.cs" />
+    <Compile Include="Boagaphish\Core\Networks\ActivationNetwork.cs" />
+    <Compile Include="Boagaphish\Core\Networks\DistanceNetwork.cs" />
+    <Compile Include="Boagaphish\Core\Networks\Network.cs" />
+    <Compile Include="Boagaphish\Core\Neurons\ActivationNeuron.cs" />
+    <Compile Include="Boagaphish\Core\Neurons\DistanceNeuron.cs" />
+    <Compile Include="Boagaphish\Core\Neurons\Neuron.cs" />
+    <Compile Include="Boagaphish\Core\Variables\DataPoints.cs" />
+    <Compile Include="Boagaphish\Custom\ActivationNeuralNetworkSkratch.cs" />
+    <Compile Include="Boagaphish\Custom\BackPropagationNetwork.cs" />
+    <Compile Include="Boagaphish\Custom\CustomNetwork.cs" />
+    <Compile Include="Boagaphish\Custom\Gaussian.cs" />
+    <Compile Include="Boagaphish\Format\StaticRandom.cs" />
+    <Compile Include="Boagaphish\Format\XDate.cs" />
+    <Compile Include="Boagaphish\Genetic\GeneHeader.cs" />
+    <Compile Include="Boagaphish\Genetic\GeneticAlgorithm.cs" />
+    <Compile Include="Boagaphish\Genetic\GeneticAlgorithmFunction.cs" />
+    <Compile Include="Boagaphish\Genetic\Genome.cs" />
+    <Compile Include="Boagaphish\Genetic\GenomeComparer.cs" />
+    <Compile Include="Boagaphish\Logging.cs" />
+    <Compile Include="Boagaphish\Machines\ReducedBoltzmann.cs" />
+    <Compile Include="Boagaphish\Numeric\CellVector.cs" />
+    <Compile Include="Boagaphish\Numeric\DoubleRange.cs" />
+    <Compile Include="Boagaphish\Numeric\IntRange.cs" />
+    <Compile Include="Boagaphish\Numeric\PolishExpression.cs" />
+    <Compile Include="Boagaphish\Numeric\TransferFunctions.cs" />
+    <Compile Include="Boagaphish\Numeric\Vector.cs" />
+    <Compile Include="Boagaphish\Schema\BaseSchema.cs" />
+    <Compile Include="Boagaphish\Schema\Coordinate.cs" />
+    <Compile Include="Boagaphish\Schema\DriveSchema.cs" />
+    <Compile Include="Boagaphish\Schema\NextSchema.cs" />
+    <Compile Include="Boagaphish\Schema\SchemaData.cs" />
+    <Compile Include="Boagaphish\Schema\SchemaVector.cs" />
+    <Compile Include="Boagaphish\Schema\TimeSchema.cs" />
+    <Compile Include="Boagaphish\Settings\MakeCaseInsensitive.cs" />
+    <Compile Include="Boagaphish\Settings\SettingsDictionary.cs" />
+    <Compile Include="Core\Aeon.cs" />
+    <Compile Include="Core\AeonGender.cs" />
+    <Compile Include="Core\AlgorithmicTechnique.cs" />
+    <Compile Include="Core\Amend.cs" />
+    <Compile Include="Core\Classes-300.cs" />
+    <Compile Include="Core\Classes-400.cs" />
+    <Compile Include="Core\Extensions.cs" />
+    <Compile Include="Core\Indications.cs" />
+    <Compile Include="Core\MatchState.cs" />
+    <Compile Include="Core\Mood.cs" />
+    <Compile Include="Core\Node.cs" />
+    <Compile Include="Core\Request.cs" />
+    <Compile Include="Core\Result.cs" />
+    <Compile Include="Core\SettingsDictionary.cs" />
+    <Compile Include="Core\SubQuery.cs" />
+    <Compile Include="Core\Syntax.cs" />
+    <Compile Include="Core\Trajectory.cs" />
+    <Compile Include="Core\User.cs" />
+    <Compile Include="FileLogic\Category.cs" />
+    <Compile Include="FileLogic\CategoryList.cs" />
+    <Compile Include="FileLogic\Command.cs" />
+    <Compile Include="FileLogic\CommandList.cs" />
+    <Compile Include="FileLogic\FileTemplate.cs" />
+    <Compile Include="FileLogic\XmlCategory.cs" />
+    <Compile Include="FileLogic\XmlCommand.cs" />
+    <Compile Include="Normalize\ApplySubstitutions.cs" />
+    <Compile Include="Normalize\MakeCaseInsensitive.cs" />
+    <Compile Include="Normalize\SplitIntoSentences.cs" />
+    <Compile Include="Normalize\StripIllegalCharacters.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Utilities\AeonGpio.cs" />
+    <Compile Include="Utilities\AeonLoader.cs" />
+    <Compile Include="Utilities\AeonTagHandler.cs" />
+    <Compile Include="Utilities\Base64Tool.cs" />
+    <Compile Include="Utilities\Build.cs" />
+    <Compile Include="Utilities\Cryptography.cs" />
+    <Compile Include="Utilities\CustomTag.cs" />
+    <Compile Include="Utilities\DataOperations.cs" />
+    <Compile Include="Utilities\Exceptions.cs" />
+    <Compile Include="Utilities\GpioPin.cs" />
+    <Compile Include="Utilities\LoaderPaths.cs" />
+    <Compile Include="Utilities\Logger.cs" />
+    <Compile Include="Utilities\SerializeDictionary.cs" />
+    <Compile Include="Utilities\SerializeHashtable.cs" />
+    <Compile Include="Utilities\SharedFunctions.cs" />
+    <Compile Include="Utilities\StaticRandom.cs" />
+    <Compile Include="Utilities\TagHandler.cs" />
+    <Compile Include="Utilities\TextTransformer.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Boagaphish\Custom\ODE.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Boagaphish\literature\1-s2.0-S0315086017300691-main.pdf" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Boagaphish\Agent\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Poly\Poly.csproj">
+      <Project>{ffa4c163-1b88-41ec-a454-1099c7f7eca7}</Project>
+      <Name>Poly</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Boagaphish\Controls\Chart.resx">
+      <DependentUpon>Chart.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Boagaphish\Controls\ChartSingle.resx">
+      <DependentUpon>ChartSingle.cs</DependentUpon>
+    </EmbeddedResource>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>

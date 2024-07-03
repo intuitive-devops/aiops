@@ -1,0 +1,98 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{95D90383-2A3B-45D6-AB22-4EF932423630}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Agent</RootNamespace>
+    <AssemblyName>Agent</AssemblyName>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <Deterministic>true</Deterministic>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Cartheur.Json">
+      <HintPath>..\z-frame-lib\Cartheur.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="Encog">
+      <HintPath>..\z-frame-lib\Encog.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="AgentCore.cs" />
+    <Compile Include="Core\Accounts.cs" />
+    <Compile Include="Core\Decision.cs" />
+    <Compile Include="Core\Instrument.cs" />
+    <Compile Include="Core\Orders.cs" />
+    <Compile Include="Core\Positions.cs" />
+    <Compile Include="Core\Rates.cs" />
+    <Compile Include="Core\Statistics.cs" />
+    <Compile Include="Core\Storage.cs" />
+    <Compile Include="Core\Tasks.cs" />
+    <Compile Include="Core\Trades.cs" />
+    <Compile Include="Core\Transactions.cs" />
+    <Compile Include="Display\ChartProperties.cs" />
+    <Compile Include="Extensions.cs" />
+    <Compile Include="Indices\CloseIndex.cs" />
+    <Compile Include="Indices\Combined\ForexIndices.cs" />
+    <Compile Include="Indices\FutureIndex.cs" />
+    <Compile Include="Indices\HighIndex.cs" />
+    <Compile Include="Indices\LowIndex.cs" />
+    <Compile Include="Indices\OpenIndex.cs" />
+    <Compile Include="Indices\Other\DowIndex.cs" />
+    <Compile Include="Indices\Other\InterestRate.cs" />
+    <Compile Include="Indices\Other\MarketIndices.cs" />
+    <Compile Include="Indices\Other\NasdaqIndex.cs" />
+    <Compile Include="Indices\Other\Snp.cs" />
+    <Compile Include="Indices\VolumeIndex.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Server\Settings.cs" />
+    <Compile Include="Server\UrlLive.cs" />
+    <Compile Include="Server\UrlPractice.cs" />
+    <Compile Include="SharedFunctions.cs" />
+    <Compile Include="Trend\Error.cs" />
+    <Compile Include="Trend\PredictIndicators.cs" />
+    <Compile Include="Trend\PredictionResults.cs" />
+    <Compile Include="Trend\PredictorManager.cs" />
+    <Compile Include="Utilities\CsvReader.cs" />
+    <Compile Include="Utilities\CsvWriter.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="ProjectNotes.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Bph\Bph.csproj">
+      <Project>{d7be9c79-b103-4cc8-a1be-6c7278763bb3}</Project>
+      <Name>Bph</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>

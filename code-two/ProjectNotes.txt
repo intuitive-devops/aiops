@@ -1,0 +1,28 @@
+September 2022
+Project Notes for Ai-Ops demo at DUO
+
+18.09.2022
+    1406: Project basics are assembled and building. Need to change-out the core and get it chewing data from prometheus, even if it is sample. Develop the money!
+19.09.2022
+    1138: A stable code-base has been created.
+    1239: However the IDE is pretty shitty.
+    1529: Working between VS2022 and Code I am getting to the point. The settings are now being loaded from a file and it is working - testing for the lifespan and what is the last statement of an agent that has expired.
+    1548: It works. The mechanics of the machine are done.
+    1618: Next step is to build the noisy container.
+22.09.2022
+    1025: The docker (build, compose) has been accomplished and how let's close the gap.
+23.09.2022
+    1135: Mounting toward the home-stretch, building a noise container that will trigger resources on the intensity of a matrix computation.
+27.09.2022
+    1306: Not going this far with it for the demonstration. Staying in VS2022.
+    2002: Sucessful pulling metric data for a period. Where is the network-noise container?
+29.09.2022
+    854: Sorted the details for today. Need to gather some metrics for the data display part one of the demo.
+14.12.2022
+    1120: Revisiting this code as I am tasked today with writing the complete whitepaper on the technology.
+15.12.2022
+    1204: Whitepaper more-or-less complete but no understanding where to send it. Shifting to ADC for pettable.
+25.09.2023
+    1222: I see the task in config was not implemented. The whirl seems to be running nevertheless.
+    
+    

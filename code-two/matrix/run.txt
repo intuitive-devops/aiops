@@ -1,0 +1,5 @@
+docker build -t matrix .
+
+docker run -it --name noise noise
+
+ -p 8080:80 --config config.json

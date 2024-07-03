@@ -1,0 +1,7 @@
+docker build -t demo .
+
+docker run -it --name demo demo 
+
+docker run -it -v config:/animals/config animals
+
+dotnet buildvc

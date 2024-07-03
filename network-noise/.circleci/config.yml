@@ -1,0 +1,82 @@
+version: 2.1
+executors:
+  docker-publisher:
+    environment:
+      IMAGE_NAME: madereddy/noisy
+    docker:
+      - image: cimg/python:3.10.0
+jobs:
+  build:
+    executor: docker-publisher
+    steps:
+      - checkout
+      - setup_remote_docker
+      - run:
+          name: Build Docker image
+          command: |
+            docker build -t $IMAGE_NAME:latest .
+      - run:
+          name: Archive Docker image
+          command: docker save -o image.tar $IMAGE_NAME
+      - persist_to_workspace:
+          root: .
+          paths:
+            - ./image.tar
+      - restore_cache:
+          keys:
+          - v1-dependencies-{{ checksum "requirements.txt" }}
+          # fallback to using the latest cache if no exact match is found
+          - v1-dependencies-
+
+      - run:
+          name: install dependencies
+          command: |
+            mkdir -p ./venv
+            virtualenv ./venv
+            . venv/bin/activate
+            pip install -r requirements.txt
+      - save_cache:
+          paths:
+            - ./venv
+          key: v1-dependencies-{{ checksum "requirements.txt" }}
+
+      - run:
+          name: run script
+          # make sure the script runs, set a 60s timeout
+          command: |
+            . venv/bin/activate
+            python --version
+            pip --version
+            python noisy.py --config config.json --timeout 60
+      - store_artifacts:
+          path: test-reports
+          destination: test-reports
+
+  publish-latest:
+    executor: docker-publisher
+    steps:
+      - attach_workspace:
+          at: /tmp/workspace
+      - setup_remote_docker
+      - run:
+          name: Load archived Docker image
+          command: docker load -i /tmp/workspace/image.tar
+      - run:
+          name: Publish Docker Image to Docker Hub
+          command: |
+            echo "$AccessToken" | docker login -u "$Login" --password-stdin
+            docker push $IMAGE_NAME:latest
+workflows:
+  version: 2
+  build-master:
+    jobs:
+      - build:
+          filters:
+            branches:
+              only: master
+      - publish-latest:
+          requires:
+            - build
+          filters:
+            branches:
+              only: master

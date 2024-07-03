@@ -1,0 +1,31 @@
+An AiOps Exemplar
+
+Not complete, more ai than ops, but the parts are in place for a complete solution. A lot of details to discuss and a lot of things to cover. I am testing the order of the presentation for best effect. Still a work-in-progress.
+
+-- Preface --
+
+I want to show an example-in-code following the presentation on the theme of AiOps. The demonstration will be split between “Ai” and “Ops”, where I will go through my proposal without entangling the audience too much in technospeak. The problem is this kind of lecture is suitable for a University audience so I will do my best to keep it straightforward. Beware, though, there might be a need for code-examples, especially in how machine-learning accomplishes its tasks as this will be the least-understood point within the team. Note, though, I have been mindful to keep complexity minimal. 
+
+I want to manage expectations that this might not be wholly complete, notably toward the operations side of the work, due to the limited amount of time for coding and preparation. There is, though, coverage of this topic in this meeting. I am planning further exemplars once the autonomous workflow is completed in a manner that properly functions. However, the mechanisms are in place.
+
+The goal is to explain the substance of machine-learning on time-series (trend) data thereby removing the veil of mystery. Yes, is rather complex - even for me to say - but is the solution of the future, given the growing complexity of OpenShift. While the effort is toward a management cluster, it is universal in that it can run at the Edge. In fact, it is designed to run just about anywhere!
+
+-- The Plan --
+So, let's get this out of the way. Here is my work-environemnt (pictures) and talk about the ambition. In summary: I invented a primitive intelligence, that runs inside of abstracted harware so that it is nearly-universal, where I have an NL patent and patent-pending in the US. In a nutshell: This a procedure whereby a program can run simultaneous tasks, learn from them, and improve its performance, given how it is internally-structured and the data arranged. In such circumstances, learning and adaptation is the key feature-of-interest. The first implmentation was in a NXT robot (show on camera). Since then a rather difficult task to apply the technology to ops management. But gaining traction, Amazon is selling ML-Optimation services, so this is coming. How will this work? I propose: Since in VS2022, segue to the ai part of the demo.
+
+Part A. Discuss 'ai' in aiops
+1. Discuss VS2022 and dotnetcore implementaton efforts
+2. Discuss the primitive intelligence (Cartheur.Demo - Program.cs)
+3. Walk through the display in mainform and its meaning (SoftAgent - MainForm.cs) LiveCandles.xml explain everything and take a lot of time! (all the way through to decision where it stops) then leave toward the vscode IDE
+
+Part B. Discuss 'ops' in aiops
+1. How the simulation of OpenShift is accomplished: docker containers - docker-compose up - (docker desktop)
+  a. Uses a special image to liason the service connection (bazel-docker) A funny coincidence when the deb
+  b. Explain the setup and the containers not Prom, etc.
+2. Run the docker compose
+3. Run Automat to collect the data (offline with LiveMetrics_noise100)
+4. SoftAgent discuss the analytics.
+5. Still need to implement how the changes are applied. Now have launch a new container as first-draft.
+6. Program needs expanding and the completion of "ops" will be the subject of the next exemplar.
+7. Improvise to a conclusion with the aeon. This is the best way, believe m.e
+

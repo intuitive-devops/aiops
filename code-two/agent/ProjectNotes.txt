@@ -1,0 +1,463 @@
+November 2015
+A forex trading (soft) agent expressed in C#. Begun way back in March 2009, the aim is to increase one's potential by at least one order of magnitude, e.g., k -> m.
+
+08.11.2015
+	925: A key aspect of this program is that it results in a decision whether or not to trade.
+	954: I've implemented the building blocks of the trading indicator.
+	1014: It is more cloudy than expected. What task does the network need to perform as its purpose?
+	1146: Got something implemented and ready for task execution based on geometric shapes from discrete-time steps, a.k.a., time series.
+09.11.2015
+	1837: Implemented the chart which plots loaded *.csv files in the data directory off the root. Have set up buttons to start SearchSolution() but having threading issue: "Control.Invoke must be used to interact with controls created on a separate thread." Not sure if I want to continue on this tonight. Maybe just a build for fun to have it with me tomorrow.
+	1919: Well, I got a build running on the NetCF3.5 Motorola. Feeling good but time to stop for the night. Next is the threading issue.
+10.11.2015
+	1730: We have a computing neural network in CF!
+	1753: Created another build to have the magic in hand.
+	1754: What's next?
+11.11.2015
+	850: Want to add more flexibility to the program in the ability to load the other functions for training.
+	904: I see I have done NN with time series, which I can extend to GBP-EUR currency pairs. What about the other types like the SOM?
+	1244: To satisfy this, I may need another form, maybe not. Now, let's record the details of the computation into a log file. Then lunch break.
+	1329: Logfile reporting of metrics done. Creating a build and let's see what's next.
+14.11.2015
+	1048: I think I have started to form the basics of an understanding of the internal heuristics of a soft agent.
+	1112: I need to change EpochError to simply Epoch to describe a period of time where the activity in a network cycle takes place.
+13.01.2016
+	1901: Spawning this work into a desktop version to push development forward.
+14.01.2016
+	1151: Here in the desktop version to push development forward.
+	1125: An idea is to have the agent make a trading decision based on rising or falling sinusoids, after finding the solution. Perhaps creating a set of subsequent data for the series would help the agent learn from mistakes. How can I organize and code this up?
+	1416: Decider is in place and the solution (as double[,]) is sent to the class. What to do next?
+31.01.2016
+	1916: Following time off, here to see what to do next.
+	1918: Turning it off. Night.
+03.02.2016
+	1312: Have been commanded that I need to work on the currency thing. Maybe its a good idea. But I'll need a lot of help ;-).
+	1315: I think the decision part is the next to work. Can I compose vectors and quaternions from double[,] to find a weight (Nystrom).
+	1627: Time for a bit of fun, let's import the mathematical componets into Boagaphish.
+20.02.2016
+	958: Here at another location hoping to make progress as time (is baneing) to make a killing.
+21.02.2016
+	1130: This is the new obsession.
+	1934: Cleaned the code and documentation to get a handle on what is going on in the code. Brain is starting to fizzle so tomorrow is another day (to work it out).
+22.02.2016
+	1952: Got the Oanda code integrated since those fucks at MB are worthless losers. Made 157,000 EUR (virtual) on this account since 2008. Holy shit.
+29.02.2016
+	1037: Here to push this along. Yes, I hate REST and java but I need to make this work.
+	2230: Achieved instrument price and candle retrieval from the server. Notes are contained in the diary.
+	2231: Tomorrow I will continue with implementation, orders is next on the plate as well as passing the available data to the algorithm for analysis.
+01.03.2016
+	1044: Here at it again. What to do?
+	1054: How about progressing to step two. Can we display the count of candles to a plot?
+	1411: Step two, a single candle is plotted. It has been logged in the diar.
+	1630: Series candles are plotted and the x-axis label comes from the json.
+	2008: Jammed up on parsing data into arrays for the SearchSolution() method. Will take a pause for the night and start tomorrow afresh. Good coding!
+02.03.2016
+	1041: Starting today with parsing the data into arrays for the algorithm.
+	1226: Step three is complete, onto step four.
+	1711: Yes, tis true, but needed to massage and compile the bits to make it proper. Check out Fig.48 in the diary.
+	1802: At the decider part of the algorithm. Brain is getting fatigued.
+	1843: Added some tooltips to make the application fun.
+	1929: Polishing it up and making it look spiffy. But getting ready to quit it.
+	1932: Want to include this here so it doesn't get lost:
+
+	NOTE: This code retrieved from TensorFlow example from GitHub. No neural network is mentioned but this optimizer would help add entropy to my own prediction model, which consists of the network performing the computation.
+            # Optimizer: set up a variable that's incremented once per batch and controls the learning rate decay.
+          batch = tf.Variable(0)
+            # Decay once per epoch, using an exponential schedule starting at 0.01.
+          learning_rate = tf.train.exponential_decay(
+              0.01,                # Base learning rate.
+              batch * BATCH_SIZE,  # Current index into the dataset. (controlled by neural network architecture)
+              train_size,          # Decay step.        (controlled by neural network window size)
+              0.95,                # Decay rate.
+              staircase=True)
+            # Use simple momentum for the optimization.
+          optimizer = tf.train.MomentumOptimizer(learning_rate, 0.9).minimize(loss, global_step=batch)
+            # Predictions for the minibatch, validation set and test set.
+          train_prediction = tf.nn.softmax(logits)
+            # We'll compute them only once in a while by calling their {eval()} method.
+          validation_prediction = tf.nn.softmax(model(validation_data_node))
+          test_prediction = tf.nn.softmax(model(test_data_node))
+
+	1933: Can we integrate these properties into our algorithm?
+	2138: Check in terms of Epoch (RunEpoch in terms of the Core) against what the theory says. Still missing batch size.
+03.03.2016
+	1024: Four things to address (not sure what amount can get done today):
+		1. Epoch and batch size, as per the theory of backprogpagation learning neural networks, (hold until next branded version as I want to keep one algorithm running, as per a version with a clean source code backup, before tearing the code up), Boagaphish--v.1.1.3, SoftAgent--v.1.0.5.
+		2. Placing orders when a decision is made to buy or sell,
+		3. Management of orders and positions,
+		4. Integration of concepts like "take profit" and "stop loss".
+	1031: I also need to bring to the form the currency columns and the ability to switch their positions.
+	1056: Currency pairs from a selection box has been implemented but will need polishing as I go along. Onto something different now.
+	1146: Looking at the Oanda developer webpage, I am organizing the form so that each aspect--rates, accounts, orders, trades, positions, transaction history--has its own form. Obviously, the form noted Step 3, which is the rates part will remain the parent.
+	1210: Have put the other components onto the form and created a set of subforms, similar to circuit calculator, to manage each of the tasks while keeping the algorithm operational. On that, there is an issue of overage, which I don't understand but defintely need to sort if the algorithm is to stay online. A soft reset perhaps?
+	1400: Accounts finished.
+	1504: Positions finished. They are empty, which I suppose is expected.
+	1822: Made progress on transactions before taking a walk along the beach past the dunes. Feeling recharged if not a total lack of energy.
+	1948: When ready to perform actions following a decision, have a look at: http://developer.oanda.com/rest-live/transaction-history/#transactionTypes.
+	2152: Soared through the code and got the bulk of the infrastructure code written. So totally blazed. Out of here.
+04.03.2016
+	1033: Here to assess what to do next. Probably work backward from 6e of the list.
+	1129: A bit frazzled today. Maybe a cup of coffee will get me on track.
+	1542: Not much done here today. Saving my strength for the next round. But don't want to be completely idle, therefore working the mood on animals, after some program enhancements including performance vectoring and cleaning the project workspace. Staying in mobile as it most closely represents my notion of what a true emotional pet should be.
+09.03.2016
+	1144: Good news! I did find out what a true emotional pet should look like, at least in the current sophistication of my style. I am content that it will be ported to android and will begin some experimentation when this program is online.
+	1206: What do some of these trading terms mean, like unrealized pl? Let's get some clarification and emboss them into the program.
+	1227: Lunch break.
+	1954: Drifting. Found a website that discusses the basics of automated trade in five parts: https://www.quantstart.com/articles/Forex-Trading-Diary-1-Automated-Forex-Trading-with-the-OANDA-API
+15.03.2016
+	917: Here in CZ. An operational check please. Passed.
+	1145: Not exactly in the mood. Will return later.
+16.03.2016
+	1056: Here to work on the decider.  I see that the NN can identify the trend, graularity is probably two minutes, possibly three.
+	1118: Renamed the Steps and included the sequence for autonomous trading, which is what I want.
+	1124: Dropped in a notification label where I can put a countdown timer, if I want, as autonomy over the selection is performed--as a bit of honrory.
+17.03.2016
+	1110: The drawing I made last night of the decision procedure doesn’t look dissimilar from what I would expect what a LISP compiler is doing at its heart. What’s next?
+	1114: I've shortened class names in BPH. Decider is in the GUI app (along with a lot of other functionality) that should be integrated at a later point.
+	1230: Sitting at having two Boolean truth tables: 1. Raw data, 2. Solution data showing either an upward (true) or downward (false) trend whose length is the prediction size. What to do next?
+	1233: My traditional thought believes that it should be tangible decisioning, as with instancing a class to execute the algorithm’s process. My other assumption would be a nebulous decisioning, in the case of using extensions to perform the process.
+	1238: Will start with nebulous decisioning and see where it takes me.
+	1500: Seems I can only pull down a total of five (ten pieces of data) of the necessary ten. Probably abusing the dimensional ray operations.
+	1501: Okay. Let’s take (the) five and move on.
+	1536: Working with the five and needing to invert an array. Maybe parse to since dimensional array before manipulating.
+	1712: I’m sure the effort can be done in one step using LINQ. Will use the double[] formatted data with trends to go deeper on the tangible decision-making process.
+	1740: Okay. How to interpret when I see a long trend to buy or sell? What is the substance of my strategy?
+	1741: It is this question I must answer before continuing.
+18.03.2016
+	1022: Why does the solution come out as double[,]? Walked through the solution and find that I need to understand it deeply.
+19.03.2016
+	812: Here to collect the SearchSolution() code and add it to the notebook. The colours on this Dell screen are a little inaccurate, I think.
+21.03.2016
+	1404: In here today but not doing much. Glued the code into the notebook. I need a spot of inspiration.
+	1738: Found a NN program written in F# as well as a cogent exapmle of a backpropagation network.
+22.03.2016
+	2006: Spent last two days on a tutorial and implmemented it (how I have) as SearchNewSolution(). I think the transparent architecture and awesome simiplicity would make integrating a very groovy thing.
+	2021: Found some Wilcoxx shit for aeon, dropped in the helpers folder. Loebner, don't know if I will care since they must have the binaries on a computer, I thought it was a webservice, hmm, we will see.
+	2102: Quitting for now.
+23.03.2016
+	1043: Here to incrementally improve where I can.
+	1051: I think it is wise to develop this concept further as the basic architecture of both systems. Starting, then, with the data in Step 3&4 Autonomous Trader, store in into nebulous xms. The use it to build a network to train on, away from this step. Then think on how to manage the data dynamics, in a similar manner, in the program’s other modules (trades, positions, orders, etc). I think, at that point, you will have it pretty much mastered and a trading day is soon upon you! :-)
+	1103: Step 1: save Rates.High, Rates.Low, etc, into the xms format.
+	1110: Beginning of SaveToXms().
+	1244: Save xms implemented and working. Started in on LoadFromXms().
+	1629: Finished the load xms method. Now to find a clever way to implement it into the (soft) agents.
+	1707: Getting convoluted as I can't have both type charts in the class, one with double[,] and one with double[] for the double[][] format of the new nn code.
+	1709: Let me scope on the mobile soft agent and see what I can get running.
+	1804: Getting into the nitty gritty (kitty). Left a note on the form cs to continue plugging the data into the RatesPeriod objects. Getting very interesting now and may stop until morning, with the intention of going to bed early. Feeling sick so later. 
+24.03.2016
+	954: There is really no way I can compete in the academic sphere. I am doing ideally what is best in this endeavour--although I still am the wireless power man!
+	1149: Forget the new nn process, need to work with double[,] in the chart perspective as nice to have data formatted like the coordinates [windowSize, value].
+	1235: We got it! The chart is both on live and xms data, can do a training/solution whatever on different sets of data  now. That loop is done, what’s next?
+	1258: Is there a way to save the network after the solution has been trained into xms?
+	1837: Getting tired, still have to work on the data format thang I got going on here.
+25.03.2016
+	1005: Here to press along.
+	1540: Made good progress on the computation form. Need a pause so will attend to other things to do.
+	1708: Changed up the interface, will take a pic later. Staring to understand the details of the solution. Have a dropdown box that I can select the operand. I wonder if the bipolar sigmoid from the old code is represented in the new?
+30.03.2016
+	853: I have today and tomorrow to get something running. Can we do it?
+	1215: Spent a lot of time working it out, but have acquired the training methods and the xms parts. I will need to optimise training in the future. Is this fact sufficient to ignore and go ahead and begin trading? Let's go ahead an implment the decision part and try some tests to see. I can optimize also along the epoch. Errors now are accumulating for a given series of sequential solutions, which is not correct.
+	1218: I suggest, in the interest of time, to get to trading on the practise account and see what the activity is.
+	2103: Locking the forcast size to the window size since they are dependent upon the network size as a function of inputs. However, I have (wasted) taken time to see that the array can take a larger forecast size.
+	2117: Staring in on placing an order for a buy/sell.
+	2133: Getting slowly time to quit. Got a start on the orders but can't see a post event in code (this should have already been done during the session). But since, really done with the algorithm bits, I can return to this. One last day tomorrow.
+31.03.2016
+	1312: Implemented the live bits, having opened a live Oanda trading account. :-) Project cleaned.
+	1525: Let's try to get a POST event coded up to place an order.
+	1815: Touching up transactions reporting since it seems the API description is different than the actual. (Maybe!) Turned off a lot of code but let's see.
+	1823: Dinner time!
+	1854: I noticed that orders go through quickly, they probably hold during market-closure periods. For now I have active trades, let's see if I can modify those.
+	2023: I think I can say that the coding of the forex project is finished. Sure, lots of details and little things given experience with the system and application, but 100% it is done, reminisce 2009 - 2016.
+03.04.2016
+	1022: Here to investigate the strange shift in backpropagation errors during training. I suspect it is using System.Random.
+	1040: I've added the class and it seems to work well on some patterns and some others not, but the error now is not indicating a deviation from ideal, so I think it was a good addition. Added class TrueRandom to the Boagaphish.New.
+07.04.2016
+	1014: Here to add a minimize bar to the main form.
+09.04.2016
+	1055: Finally reached the weekend and here to code up some tasks for the period:
+		1.	Separate thread process when clicking train, search solution, forecast, and automat buttons so that while they run, I can send the soft agent form to the taskbar,
+		2.	Cast my new idea for the forecast algorithm which I have started, but need to complete in my paper notes.
+	1953: Encapsulated the forecast thread and delegates. Next step is a break and then to return to its functional design, on paper that is. Tomorrow then.
+	2106: Fussing around with the new forecast bits. Need to finish next session as well as shape the automat. Night.
+11.04.2016
+	1734: Started making a design today. Let's see how to implement it.
+12.04.2016
+	1031: Challenge here is to implement the method into the algorithm, then to establish the domain of the automat. This is all.
+	1034: Looking to move softmax into TransferFunctions.cs, even purely for the evaluation aspect. But will need to remove the layer parameter, if it can do without it. Otherwise, I will need to think of another strategy.
+	1035: No, need the layer parameter.
+	1045: I think I need to meditate through the code and see where the function fits best.
+	1126: Tried a simple implementation and see needs a deeper integration.
+	1246: Started a new method ComputeSum as a place to begin implementation.
+13.04.2016
+	1152: Here to make some more progress. Let's stare at ComputeSum(double[] input).
+22.04.2016
+	1936: I want to propose a run to completion. The first step is to implement a server logfile to diagnose why I can't make a live trade in the instrument EUR_GBP. Got the tech support on the line, so will see what's to do and what I can get finished before "trading day" of Wednesday, 27.04.2016!
+	2006: Think the orders issue is sorted.
+23.04.2016
+	951: Next is to sort the softmax for softagent feature.
+	1014: Did a bit to contain the logging in Orders.cs, created an overload of WriteLog so that the method caller can be included. The same idea should be propagated across the other classes in the namespace.
+	1022: In the time since last I was here, I've misplaced the efforts. Getting back into it.
+	1142: I need to collect the magnitudes of the dataset. Added a todo.
+	1245: Just sorted training and have set training button click as a training or retraining exercise on both the predictive and forecast networks. This alone has shown improvement in the iterations/epoch ratio without increasing iterations, making it more efficient.
+	1942: Maybe I'll skip over the softmax to get to the automat.
+24.04.2016
+	1136: Taking on the softmax algorithm.
+	1349: We have the first and second sums!
+	1411: Have the first and second results!
+	1459: Softmax implemented! Returns values higher than 1. Will have to review.
+	1751: I have coded the decision algorithm based on the original idea of the number of sequences appearing in a list, as a place to start. Buy or sell information is being passed to the notifications box. The last remaining part is to have the magnitudes of the y-axis available to the analysis.
+	1815: Implemented magnitudes and the code is complete. Next is left for operations and tuning during runtime.
+	1816: Impressive!
+	1827: Was a small error, needed to reset the registers for each time they pass through the algorithm with a new task. I think it is more or less complete!
+	1830: I think I am ready for my noob day at trading, Wednesday. Would be nice to do the paper inbetween to see if I missed something.
+	1852: It's perfectly behaved.
+	1944: Here touching up the xms files in the application, loading and saving as it will be good to manage larger sets.
+29.04.2016
+	2009: Trading live, need the get live rates button clicked on the interval set by the granularily dropdown.
+	2050: Implemented the autolive timer feature. Need to clean the code next visit. Now I can watch the chart tick by.
+27.12.2016
+	1241: Been away for a bit but want to keep development moving along, from a sales-channel (and fun with profit) point-of-view.
+	1246: I see an analytical task to be performed which takes the current unrealized profit-and-loss and compares it to the current value on the position from the live server.
+	
+	I guess the most pressing question is: What is the face of this aeon? In the beginning a console(action) should suffice to get the results of the analytics I care about.
+
+	1247: Having to leave this soon but want to keep this going along with the other aeon products, while cybermining.
+	1344: Plans change. Now into working at my custom-network biases. Love saying that! :-)
+	1505: Staying in Program.cs of the console as a place to play and learn. Accuracy currently set to 1E-7.
+	1506: See something is working out, how about using the real data to determine the analytic difference task?
+28.12.2016
+	1644: Let's spend some quiet time together and get through it.
+29.12.2016
+	932: Getting an earlier start, added Beijing and NY clocks to get the perspective of market time.
+	1045: The functions are completely deterministic. Next is to understand what to use them for. What did I attempt previously?
+	1229: Let's get into the essence of the flow (dynamicies) of the algorithm. Copying steps 1-6 to the console app. I know these are mixed--new vs. old bph--so let's keep it separated where is possible.
+	1408: Chasing in some projects and have come full circle with only a little better understanding. Next round?
+30.12.2016
+	1815: Copied the contents of the MainForm.cs code to a Methods class to render the data in another way. Ready to start testing.
+	1925: Get operation, i.e., step one, is complete.
+31.12.2016
+	1735: I realized this morning that I just constructed a higher-order program, that is, each method like TrainNetwork() contained those routines of the zeroth order to create the first order objects to be used by the algorithm. I think I just evolved. Thanks, Darryl.
+23.07.2017
+	2135: Here on the new testing laptop--four cores and 12GB of RAM--with the forex program plus the deep learning lecture notes and examples which have helped me get over the TensorFlow conundrum that stopped me in my tracks. Glad to see I finished up the implementations of the essential components of the Oanda API. Nice to see it still works, and most interestingly, am 15 euros up. So much to talk about, the Brexit thing as well as the completely volitile GBP-EUR pair. Couldn't be gifted with a better opportunity.
+25.07.2017
+	1359: Have brought over the code here to andorra since will need to leave dolores here in the interum. Have the eclipse and git examples from the delft lecture. Saw in the news that parilment is on holiday for 48 days, until 05.09.2017, when the currency volitility will crescendo. I have until that time to perfect this algorithm and take advantge of this market.
+04.08.2017
+	1155: It is pointless for me to continue to ignore the potential and importance of executing this project. Starting with getting coin servers up and running, then will focus on these elements.
+05.08.2017
+	1038: Here to sort the issues. Would like to tear into this to modularize it, therefore making a backup of its present state.
+	1042: What the hell was my intention with the console program with doubling the functional classes from the gui? Is this really a test project?
+	1130: Have cleaned up the program and added a test project. Now will sort where exactly I left off.
+	1344: Ran through the methods and setting up logging so that I can see the steps without a gui. This is a more realistic place to begin since the algorithm should be running on one of the animals machines.
+	1510: I think I am making good progress on separating orders in the code.
+	1513: One thing which is pretty annoying: the error handling yields windows popups instead of log entries. Shit, need to fix these.
+	1708: The data is loaded, 200 candles wide. Now what to do about it?
+	1740: I think I am reporting the error incorrectly, by creating a completely additive over more than one solution.
+	1917: Made fucking excellent progress and have a complete model in hand. Now need to make it work with what I got.
+06.08.2017
+	728: With a complete model in hand, I now turn my attention to the trading phenomenon.
+	800: Something is wrong in the solution. I added the chart object to AgentCore and need to tailor the data so that it is processed in the chart, like in the windows form. I'll need to walk through the process.
+	845: Was only missing the const of the network correction. Now returns a solution. It will be my mission to improve it over time. Now the process says that I should buy, great, what now?
+	959: Computational elements implemented via the test, tuning is now required. Will finish up the logical sequence of order placement so that the process in done, then needs tuning and optimization tasks lastly.
+	1045: In approaching the remainder of the logic for the agentcore, refactored data storage code and methods away from MessageBox.Show to Logger.WriteLog and created new project to contain them--appropriately titled "SoftAgent".
+	1121: Completed the process issues and seriously refactored for clarity and simplicity. A lot of little tweak sessions available at an hour chunk each, in order to have fun during the week. Now want to hit next big implementation of "buy/sell your instrument" and "how is your portfolio doing?".
+	1151: Not too bad. Placing an order, either buy or sell, is in place. Rather simple to put these in. I would say the heavy and most mundane aspect is done, the model is fully complete in terms of what it needs. I would suggest now to start the optimization to improve on it.
+	1252: Post lunch, what would the operational feel of the application when run on one of the animals?
+	1344: Got some voice commands--borrowing the code from animals--wherein to practice with how to control the app once it is installed and running. Now thinking to do something else, let's see where this goes.
+11.08.2017
+	930: At the beginning of this new session. The aim is to have something running with which to test when the markets are open. Am starting with the voice controls to finish it off at this point. Will use a predictor program I found on the internet to try to formulate a computational sequence which is more sophisticated (at this point in time anyway) than Boagaphish. I want to test with it using the datasets I have to see if it can compute results that can be acted on, e.g., buy or sell in the practise space.
+	940: The first challenge would be to format a dataset for the other project. I will step over there.
+	942: Okay. I need a set of data in *.csv format, would it be easier to code for a format from XML, else, fit the program accept XMS? Hmm, first pass: create a duplication of dow.csv to load into the program from forex data.
+	1012: Got something coded up, let's try it.
+	1033: After some tussing, the rates are pulled from the server and stored in csv format. Will leave the code, just toggle saved outputs, I suppose.
+	1117: Will bring the form over here for disassembly. Need to get a handle on the complexities of the form here. Procdurally, it looks super, but what about those parts I cannot see how to fit into the design?
+	1137: Trend form integrated. Now let's get on with it!
+	1310: Moved some components around and will try to create a prediction based on the template form I have included. Will have to tear it up, but hopeful I can learn something about math and process.
+	1313: Damn, I need an emotional rescue in feeling so pavelish.
+	1358: Looks like the algorithm does a prediction by putting the numbers of the dataset together, although the differing number-sets from the indicator object does not couple the datasets.
+	1440: Have changed the code, now need to save csv files for each of the indices: open, close, low, high, and volume. The last I will do in a further interation. Getting better since now I only use the high data for prediction.
+	1450: Code is in place, now I need to create separate csv files for each of the parts of the candle, with the date and amount as columns for each.
+	1511: Got that data sorted. Now let's run it up in the application.
+	1544: Data is now loading, all of it, now need to increase the granularity of the time dimension. The original granularity was the day, while now it is a minute.
+	1627: Got something to return! :-) Need to increase the numeric resolution of the prediction.
+	1643: As of this minute, we have accomplished a prediction of the forex data we have been gathering since March 2009. And, I must say, pretty accurate for such a small amount of training, and didn't hit the computer too badly. Of course, this is only the start; nevertheless, congratulations!
+	1717: Next step is to put this into the application as if the result is golden. Let's get the code ready for testing. After integrating into the automat form, we can discover strategies to improve the quality of the prediction.
+	2025: Here staring with green on my mind.
+12.08.2017
+	749: Will begin by implementing some command bits, then to implementation of the prediction process I scoped in the TrendForm, then back to the (voice) command controller for each feature. It would be nice if a five-minute simulation of a trade could be done as a prelude to a realistic full test.
+	941: Having a heck of a time getting started. How about simply creating a non-visual replication of the manual operations at the TrendForm?
+	1015: Just now got a start, have running a trend window.
+	1022: I need to separate the autonomous trading (that which I want to write now) and the interaction protocol for the non-visual trading environment.
+	1058: Have to implement four basic actions: 1. training, 2. prediction, 3. decision, 4. action (buy or sell).
+	1258: Training is implemented. Timespan was very easy, library I have picks it from the dataset. Will break for lunch now.
+	1332: Did the usage of the data grid view help? I'm not so sure.
+	1415: Gridview for training not necessary. Have issue with the logic of the prediction in agreement with the first datapoint in the dataset. I don't want to predict each value--or do I for accuracy? First pass...
+	1429: Was overthinking. Prediction completes now.
+	1432: Now must pass the relevant values to a storage class.
+	1447: Have passed the values from the prediction to a static (storage) class in SoftAgent.Core. Even though static, still must intialize size for arrays.
+	1459: Onto the decider piece of code now.
+	1506: Here is where it starts to get complicated.
+	1553: Isolated the data pieces needed for the decision. Last (high) of the storageset, first (high) of the predictorset.
+	1618: Decision done. Starting with a base value for number of instruments to buy/sell, now 20. Would be nice to compute this number.
+	1625: At the end where I stopped with the development on MainForm. Have finally completed this very difficult and certainly overdue task. Last left end of April 2016.
+	1802: Added functionality to disable listening and the ability to resume it with a command. Added a check before a buy or sell is initiated from the agent.
+	1803: Starting to get dark, maybe time to slowly stop for today.
+13.08.2017
+	758: Thinking of first doing the work to get a deployment ready. That would need a mechanism to set the different variables in the program that are the most interesting to test. I think I will use the load setting routines from animals to aid in this.
+	813: Wonderful that I already have implemented the settings dictionary code in Boagaphish. Now ready to tailor the config file.
+	851: Done with implementing the config file.
+	929: In copying the files, I happened to look at the logfile. Fixed some substantive errors in the training and prediction parts, was wondering why the automat was reporting zeros for these values.
+	930: A coffee and will setup the test environment.
+	1054: Not too bad on the test computers. Started with the one with the least resources. Note to disable listening when entering command actions.
+	1103: Amended the code to disable listening while running a long operation such as a trading session.
+	1104: Doesn't really work as I would like, do not want to disable the entire speech engine since I would have to reinitialize. Some thought required.
+	1105: Feeling like I should put a 'done' sign up--little 'd' because optimizations and research needs to be conducted. What kind of things can I devise? When can I envision this hooked up to the practise account for a trading test?
+	1408: Short post-lunch break before a bicycle outing. Smokes on! :-)
+	1430: Fixed an error mixing configurations for apps on sticks in the gui. Now have automat, gui, and sanity check as one set of tools.
+16.08.2017
+	1147: Here to continue development. With the ability to work while the market is open, I can devise some real tests of the decision and ordering parts of the engine.
+	1412: I think I should look first at what code is missing. BTW: brain is reeling from events, think will take a nap before continuing.
+	1540: Back from nap, having to do more boring things. Brain is drifting...
+	1658: Am proposing to have a run tomorrow from wake until lunch. Hopefully, the writer's block will have subsided by then.
+	1712: Thinking I need to meditate on what a decision mechanism is, if I have issue defining meaning inherent in a reply of authorization.
+	1732: How to envision the entire portfolio management in the mind of an active trader? Need architecture and not necessarily sophistication. That is something I have to acquire.
+	1758: Getting time to be off the computer. Tomorrow then!
+17.08.2017
+	826: Here but have not yet started.
+	934: Cleaned up some of the functionality of voice caused by the change of the control pattern. Ran on a new set of data. Now I have two sets of data, which means I can start to architect portfolio management.
+	1320: Thinking to bring in the sources from the old bankview project to help define how to structure the architecture of portfolio management.
+	1406: Had a look, not much in there and a spider's web of code and data handling which I think is far surpassed by the system employed in SoftAgent. Sure I can criticize the old works but don't forget the detail required to mitigate a database transaction to asp.net controls--thanks Darryl!
+25.08.2017
+	1428: Spent time shaping autonomy in the haden project. Is worth a paper on phototaxis. However, now met with either implementing Action<> for orchestration in haden, or shaping the analysis, autonomy here. Not 100% sure but am feeling my way through.
+	1529: Using the new test framework, I have a logged set of clear bits of information verses statistical data.
+	1605: The entire trading spectrum of tasks is fully implemented. What should the first machine look like? Spending time at the truth table since it takes multiple predictions in order to shape (and model) a potential trend.
+	1611: Interesting revelation: the time I spent coding in August using the "math" prediction method took me to the same place--save a shorter prediction list which is unable to use the trend logic for the decider--as the first implementation. Which is better is yet to be determined, but I've circled 'round.
+	1619: This is fully implemented. Make a machine.
+	1730: Cleaned the beautiful Boagaphish code. The integration of the code I wrote from the tutorial with what was first used in the 2009 experiments is sublime. Finished off the scale/softmax implementation. Needs testing and optimization, of course.
+26.08.2017
+	811: In the night I had some ideas, one of which was a design of soft agent so that it can be run on Windows and Linux using Mono. A consequence of this is that the speech parts need to be removed and buttons replaced for the functions. The object is to get something which can be used for testing as quickly as possible, since experiementation and usage will decide which steps to pursue next.
+	844: Console implemented with the functions available in the voice version. Have decided to create a competition between boagaphish and encog computations as a way to glean an understanding of behaviour of these networks as well as to monitor their accuracy. Settings for boagaphish I have now integrated with the ones used for the Encog.
+	1056: The new interface is ready and have evened out features and functions for each NN type (Boaga v. Encog) the former with xms the latter with csv in code.
+	1103: Am planning to try some testing tomorrow when the market opens in Asia at 2300. Will need a nap in order to not be a zombie come Monday. From reading the advice, day (between 1400 and 1700 local time) trading is the best since more volume is a more robust financial opportunity.
+	1148: Passing in the values to the AgentCore constructor is stupid. Need to pull it from the config file.
+	1215: Console and AgentCore now use the SettingsDictionary. Now there is control from outside the app for different parameters.
+	1223: Backed up. I think the machine is (nearly) implemented and ready for testing. The last few hours coding reminded me of the flurry of work which took place when I got serious back in February-March 2016. Will take a break and peruse.
+	1226: In the few minutes I have sat, yes, I am ready to devise a test.
+	1234: Funny how such was the intellectual task of visualizing taking the scatter of features from the trading agent, including the service provider of choice, Oanda, creating a set of modular components, then using those components to create an agent and instigate a trading session. It is the intellectual impasses, I imagine, are the reason for the substantive delay in getting this project ready for test.
+	1237: Note to add the csv file constructs for the Encog part of the program from SoftAgent.Gui to ProcessLiveData.
+	1401: Implemented the csv file saving, as well as a special folder for xms candle data, title appended by number of candles. Fucking smooth dude.
+	1417: Working well but starting to lose focus. A break?
+	1418: Use it now and get it ready for a full test when the market opens.
+	1459: Back from break. Will have a hard break in two 1/2 hours to fetch dinner and think about the test.
+	1511: Working on the trend explorer app, since can get xms to csv, would be interesting to see another take on the dataset.
+	1555: Form is daft. One in the runtime directory works. Good enough for now.
+	1716: Last detail is to sort how the decider works. For boagaphish, the truth table is being used. For Encog, single-valued.
+27.08.2017
+	1600: Thinking through a typical day, as a dry run and a first pass. "How's that portfolio doing?" A child form for a datagridview of historical trade data is required.
+	1620: Found the old portfolio manager screen I want to duplicate here now.
+	1830: Got the bulk of the information into a separate portfolio window. Plus copied the order placement form to the automat.
+	1855: Think I am done, for now, with the portfolio manager. It has what I need. Good to go!
+	1907: Invented a mechanism to refresh class-stored data after the first time going to the server for it. Finished for today.
+01.09.2017
+	746: Here on the first day of the rest of my life. I love you, Baarn-life.
+	900: Will, at this time, go between haden autonomy and this project. Monday is the first official start to the new job.
+	906: Wrote in the diary that Monday the 4th and the encompassing four weeks is my trading training period. Therefore, it doesn't make sense to start something in here that I will need to pursue as I chase through the marketspace.
+04.09.2017
+	957: Starting slowly, I see, here this morning. Corrected for a null dataset error in the portfolio form.
+	959: Tagged the old portfolio manager screenshots from 2008 to aid in the design.
+	1018: Looking at the new portfolio manager tells me it is in order. All the available data is visible in the columns and across the tabs.
+	1155: I think the most troubling question I have to answer is: In terms of a real trading exhange, where to get started?
+	1300: I'm sorry but I cannot focus on this now.
+05.09.2017
+	1253: Sorted the Oanda account details and noticed there is a 2.0 version. Also obtained a quant program they referred me to on GitHub, as part of my membership in the AlgoLab. It is getting very interesting.
+	1410: Am thinking that since I have this personal time, I will focus on the “trippy twee” tasks since, when D is in the house, the “procedural” tasks can be done, e.g., execution steps of the plan, concrete and linearly stepped. The former task category consists the highly creative ones, programming, architecture, runtime, and analysis of the learning algorithm in context with animals and softy, and maybe haden where required. The latter will be, basically, the execution of the business plan and linear implementation of the steps to business magnate—a.k.a. those things requiring drop-dead sobriety.
+	1415: This is one of two trippy twee projects.
+06.09.2017
+	1112: Spent some time this morning looking into ASIC bitcoin mining rigs. I'm really not in the mood to plunk EUR2500 for something which exists on a ratio, e.g., TH/kW where it appears that 40% of the profits will go to electricity bills. Yeah, sure can sneak it in a place where electricity is part of the rent, but how sustainable is this model? This means that I would be mining in anticipation of a trade where I can exchange alt-coins for cash when it comes time to pay the costs, or need to absorb them from other resource posits. I have come to the realization that such a naive realist perspective--that one's wealth can rise and rise--is in jeopardy since resource management is a series of rises and falls, and the creation of wealth lies in not only one's creative aspect, but the tools at one's disposal to play "the game" of trading. In terms of a game, resources will move from one party to the next based on the "intelligence" of the trade to best your opponents--others in the marketplace. Therefore it would seem that, except in the case of animals where you are trying to build wealth "from scratch", trading is the only viable and mathematical option to wealth creation.
+	1216: The last question I posed to answer was: "How's that portfolio doing?" Currently, there is the datagrid in the form which contains all the relevant details, but remains only as a means to display the data from the account. How would answering this question feedback to learning?
+	1218: The next question I pose, then, is: how do I increase the chances of a profitable trade? What I can do manually is place a buy order, then hope the value increases over time until the moment where I will place a sell order. To reach maximum price difference SellOrder - BuyOrder = NonNegativeValue, would be the goal of the algorithm, but what kind of learning can I apply? I must confess I feel a bit blank on the subject and only can "feel" that there is something there, just as in the case of animals and the sophistication of its runtime. But, as in that case, I find that I am mute to make any tangible step.
+	1223: Maybe simply walking through again and again the steps of the algorithm and its execution and its thoughts will aid in my understanding and prompt my creativity.
+	1302: Looked at the Quant program made available by Oanda (democratizing finance??) and need to update to VS2015. It is about time anyway to clear old the old VSs and stick with a more modern one.
+	1310: I think a realistic strategy is to analyze the Quant program and see how to leverage it in softy. Not a moot task as you really need to learn how to trade in the markets using software and seeing the code, experiencing it's lovliness, will foster a more focused, and savvy set of strategies.
+09.09.2017
+	1636: Jumped ahead and walked through the Jupyter (Python) tutorials, provided by Quant. Okay, but ends up where I am now, with machine learning trying to figure the next value. I'm quite far. There are some analytical tools I could import to the automat, but in reality I need to continue where I left off, before forking to look at Oanda and Quant sometime in August--you know it is really hard to determine what was happening according to this log.
+	1639: A substantive idea is to begin the decision-vetting code by making analytic graphs in order to apply different mathematical forumulas to get the future values, in visual form. Then once sorted, push a set into the background process and run. So, if I start with what happens in the original GUI, create sets of chart windows with different visualized datasets. Perhaps exploring the Options tutorials from Quant, then, make more sense.
+	1809: Got a start but was only able to implement the visualzation of the candles data, like on the Gui, only more crudely. The length of these projects seem to extend each time I try to solve a problem on the path to a complete solution. Perhaps just getting into the "nitty-gritty", as the morons say.
+17.09.2017
+	1609: Starting fresh with this project as I accomplished my aim with animals begining way back in January 2015.
+	1616: I think the best way to continue is to simply implement what you have and run it against the practise account. In other words, implement a machine, like for haden autonomy.
+	1755: Got a good start on the new chart form for covariant analysis, as a place to begin with the first algorithm.
+	1854: Spending more time, the chart control is ready and can switch now between trajectories (high, open, low, close). Need to add the learning parts for analysis and think she is ready.
+	1918: Left off with an overload for the solution to be returned to the chart object for display. Not working just yet.
+19.09.2017
+	1224: Have an idea to collect the indices into lists for the purposes of analysis. Actually, nothing really substantial (I think) just playing around to get the feel of how the algorithm should go about its work.
+	1235: Have an object ForexIndices, which are really candles, or, posited in the static class Rates.HistoricalRates.
+	1411: What exactly is the point of using these newly created index classes when I have all of it already mapped out in static classes?
+	1412: What am I trying to accomplish?
+	1414: Time to start over. Beginning anew with fresh eyes on what the algorithm flow (jo) is.
+	1437: I think the wetware of the neural network is okay. Something, then, in the integration of the transfer function from the new code I wrote applied to this. I can see the function being noted as well as its alpha value, so again, wetware is okay. Will check into how the function is being used after lunch break.
+	1529: Bloody hell! Two missing variables from the chart object I didn't see. ;-( -- Works now.
+	1531: Now what about using those clever transfer functions?
+	1557: Got the solution appearing at the end of the iterations onto the chart form. Will investigate the transfer function implementation and then what to do?
+	1638: Implemented the transfer function through to Bph. Only have Sigmoid and Bi-Sigmoid implemented, can advance my code in the places I have provided for it. Created a Gaussian class but maybe redundant or not done correctly. Left todo notes where to continue. Regarding analysis, the b-sig works best with linear data, like the *_500.xml datafile currently available to the application. Can run against each of the four trajectories by changing the dropdown menu. Once done, would be interesting to pass the state to the forecast part of the code. I think this is the next place to head to.
+	1800: Started by creating a new form for the forecast analysis but think I am getting lost as it is nearing the end of the day. Next time then.
+20.09.2017
+	1850: Implemented the forecast solution part. Simply follow-on from here.
+21.09.2017
+	750: It occured to me that the creation of the forecast network is completely unnecessary as is compariable to a monkey throwing feces or reading a patten from stones one throws on the ground, it bears no obvious resemblance to any forecasting method. Therefore, I will be removing the network methods and focus on what is important--the solver network with values that have been determined via machine learning paradigms. 
+	840: Noticed have reduced the complexity of the AgentCore from its original (when mixed with the chart operations when I started by copying from MainForm.cs) 1200 lines to a more modest 850.
+	841: Note that multi-threading in the AgentCore is currently off. Left commented areas in case this should be different, which it might.
+	851: Have a clear sight into the network and transfer functions which are operating on each of the layers. Training uses a single set of data (from file or web) which is classified as the primary training, or first time a network receives training. I am trying to explicitly classify terms as it will become very relevant when I write about this in my book.
+	852: Next step is to continue and have the knowledge gained in the network to apply it to generate a set of x forecast values. It would be super slick to then compare the real value of the forecast, once time catches up, and further tune the network as a form of secondary (academic) training.
+	1820: While away was thinking of the 2005 ODE research I did when first arriving in central Europe. Can I start to apply my own ODEs as long as they are differentiable?
+	1915: Started with an implementation of the van der Pol oscillator, code blows up. Tomorrow then.
+22.09.2017
+	848: Had some dreams last night which made me consider the advancements I made in code yesterday. Usually, I only dream in code, but this was different.
+	849: It is strange how when I use the new transfer function, a network shows up null. I wonder if the functions are coded in two places.
+	1020: Discovered that yes indeed there are two places of implementation, a missing class in the ActivationFunctions will solve the issue. However, not sure of wanting to spend time on the new material (Van der Pol) rather then spending it on getting the algorithm to work as I would like. I think I will press on for now and return to this very interesting exercise later.
+	1032: A mix between old and new is a mess I must untangle.
+	1116: Issue is that I need to also implement the wetware for the new functions into the neural network constructors, two instead of only one place. Not the time to sort this now, rather continue on.
+	1118: If I have no forecast network, how the hell do I cast the next five values from the network?
+	1124: I would state the code is superb in terms of the algorithm. WIth each set of candle data, the training converges with the solution. So superb that I will make a backup now.
+	1128: How to get the forecast values?
+	1139: Forget the net. Return to your Delft lessons to sort this problem.
+	1148: Let's start more simply: about that codeproject article from WAY back when...(darryl)
+	1322: Nevermind. Found the trend predictor code using encog for prediction. Bringing the sources here.
+	1602: That was a bust. Seems they do exactly the same as I. Needs some more thinking.
+	1817: I think I have found an appropriate forecast from the solution with a set of values the forecast size length. Limited to input size (5) but the chosen value, what should be done next?
+	1908: I have enough substance to say that the core of the agent is completed. Next to implement strategies.
+23.09.2017
+	950: Spent the last hour looking at the code and mostly cleaning to shape an understanding what should be done next.
+	955: Thinking about commenting out saving to *.csv files, will leave it for now in case future analytics require it for other algorithm trials.
+	1008: Created both debug and release versions of the app. Cleaned out old files no longer in use, separated networks from xms candle data. Removed x64 configuration.
+	1015: This project is clean.
+25.09.2017
+	1546: Will start integrating the practise account and set the numbers into their places. Was going to create a new account for this step, but after a long way around, too much trouble so will use what I already have.
+	1618: How about this? A routine which saves the unrealized profit every ten minutes to a file?
+	1733: Monitor variables in terms of the account is finished. What I see immediately is the information contained in the movement of the unrealized profit & loss. I want to run this monitor on the test computer. This is part of the strategy I have thought about regarding a distant datapoint, such as an open trade distant in time, which serves as a point of reference for portfolio performance.
+	1759: Is logging the event twice on the test computer. Added unsubscribe and moved the subscribe event to the button click. Let's see how this goes.
+	1812: The fixed worked. Far as I can tell the event was implicit and in the Atom CPU world, behaves differently, which would fit other observations I have had about this.
+07.06.2018
+	1327: Here to pull down the very nice plotting code for the differential analyzer project. Will also need the train and search solution bits for animals indications from the patent.
+19.06.2018
+	726: Training implemented. Here to work on the next step in animals indications: SearchSolution.
+06.08.2022
+	1033: The time has come for this project to be absorbed into the architecting of *AiOps* for the newest endeavour. The questions is: Now that we have a descriptive framework for the sales part of the product, how can this contribute to the runtime of an aeon running an "aiops" task? She must be reticent to always be aware, like a little lifeform, and pull the levers of changes in response to undesired metrical data.
+	1045: I am a bit torn between running this project as soft agent rather than in the differential analyzer group. The soft agent is the starting-point but is divergent from what it was used for - it needs to be as an operations program. Can I bring the form over to change to suit the needs?
+	1132: The softagent gui has been integrated into aeon operations. We are now ready for serious development!
+	1201: Have just reconciled the code so that the aiops is here in the softagent project. Not a big fan and thinking to separate the solutions.
+	1209: Done. Now we have the starting-point to actually develop a cogent solution. ;-)
+	1223: The entirety of the project now works. But how I demo a Windows App is another story.
+	1236: Cleaned and backed-up the changed code projects. Break time, then development.
+	1351: I have confirmed that Prometheus has a high-dimensional time-series database of the data it collects in Kubernetes. This is 100% compatible to the code in the soft agent - we were pulling from Oanda but we had to format it from the json. Maybe Prometheus needs this or maybe not. Using Grafana dashboards as a confirmation of the effectiveness of the aiops agent is a superlative idea. I've drafted a figure to put into the writing.
+	1533: A starter class for the prometheus PormQL receiving side is coded and ready. The fields have the old names but they are ready to be changed and put into service.
+	1546: Added the indications as intelligence (this is the meat and substance of the action in the patent) and where the bulk of the research will invenitably occur. The Boagaphish project referenced here is different than the one in animals composite. Maybe these two versions can combine at some point.
+	1605: Added some analogy code from back-in-the-day. The program now has a compartmentalized "brain" [struct] in order to have a place in memory to process data coming from the algorithmic neural network. Time to slowly run some errands.
+	1608: Next step is to count the development tasks needed to build the program that it suits the merits of a live demo.
+07.08.2022
+	849: I am right about two things:
+		1. The need to remember and,
+		2. analog processors like the ISLP that manifests plane waves when the voltages move thorugh the network hardware. 
+	  The latter is extremely important as the Cell code (distance between computational centers) is what mitigates resonance patterns in such a processor.
+	938: Cleaned-up some documentation to make it consistent in Boagaphish and learn what algorithms we have an how to construct solutions. This is a new era of youthful optimism.
+	1147: The sun was streaming through the windows so had taken a break from the brightness. Made meatloaf and shaved in the process.
+	1227: Back at it. Looking at the book as it comes back into play with the advances I have and will propose for the four-pillar AI.
