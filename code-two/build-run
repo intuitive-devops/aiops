@@ -9,3 +9,7 @@ docker run -it -v config:/animals/config animals
 dotnet buildvc
 
 docker build . --file Dockerfile --tag cartheur/network-noise:latest
+
+docker build . --file Dockerfile --tag mcio.acr.io/network-noise:latest 
+
+docker push mcxxx.acr.io
