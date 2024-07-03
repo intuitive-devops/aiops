@@ -1,4 +1,6 @@
-docker build -t demo .
+docker build -t aiops .
+
+docker tag aiops cartheur/aiops:20240703
 
 docker run -it --name demo demo 
 
