@@ -2,6 +2,11 @@
 
 The compendium of resources for docker-based AiOps.
 
-### Status
+### Open initiatives
 
-Makin' progress.
+* Next step is to check on the deployment.
+* Where is the metrical data from Prometheus?
+* Where is the data being analyzed?
+* Where is the decision tree being contemplated?
+* Where is the decision tree being executed?
+
