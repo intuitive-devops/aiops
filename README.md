@@ -10,3 +10,4 @@ The compendium of resources for docker-based AiOps.
 * Where is the decision tree being contemplated?
 * Where is the decision tree being executed?
 
+* How is the whirl mitigating behaviour?
