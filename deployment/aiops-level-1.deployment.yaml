@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: aipos-level-1
+  namespace: aiops
+  labels:
+    app: aiops-L1
+    spec:
+      tolerations:
+        - key: kubernetes.azure.com/scalesetpriority
+          operator: Equal
+          value: spot
+          effect: NoSchedule
+      containers:
+        - name: user-api
+          image: aiops.azurecr.io/network-noise:latest
+          ports:
+            - containerPort: 8080
+          command:
+            - '--config'
+            - ./noise-config.json
+          imagePullPolicy: IfNotPresent
