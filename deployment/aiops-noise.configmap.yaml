@@ -1,0 +1,8 @@
+apiVersion: 'v1'
+kind: 'ConfigMap'
+metadata:
+  namespace: 'aiops'
+  name: 'aiops-noise-configmap'
+data:
+    APP_ENV: "acceptance"
+    NODE_ENV: "production"
