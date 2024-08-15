@@ -5,6 +5,15 @@ metadata:
   namespace: aiops
   labels:
     app: aiops-L1
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: aiops-L1
+  template:
+    metadata:
+      labels:
+        app: aiops-L1
     spec:
       tolerations:
         - key: kubernetes.azure.com/scalesetpriority
@@ -12,11 +21,14 @@ metadata:
           value: spot
           effect: NoSchedule
       containers:
-        - name: user-api
+        - name: network-noise
           image: aiops.azurecr.io/network-noise:latest
           ports:
             - containerPort: 8080
           command:
-            - '--config'
-            - ./noise-config.json
+             - '--config'
+             - ./noise-config.json
           imagePullPolicy: IfNotPresent
+          envFrom:
+            - configMapRef:
+                name: aiops-noise-configmap
