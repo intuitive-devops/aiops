@@ -1,0 +1,34 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: network-noise-level-1
+  namespace: aiops
+  labels:
+    app: network-noise
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: network-noise
+  template:
+    metadata:
+      labels:
+        app: network-noise
+    spec:
+      tolerations:
+        - key: kubernetes.azure.com/scalesetpriority
+          operator: Equal
+          value: spot
+          effect: NoSchedule
+      containers:
+        - name: network-noise
+          image: aiops.azurecr.io/network-noise:latest
+          ports:
+            - containerPort: 8080
+          command:
+             - '--config'
+             - ./noise-config.json
+          imagePullPolicy: IfNotPresent
+          envFrom:
+            - configMapRef:
+                name: aiops-noise-configmap
