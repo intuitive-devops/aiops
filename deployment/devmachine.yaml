@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: devmachine
+spec:
+  restartPolicy: Always
+  containers:
+  - name: machine
+    image: debian
+    resources:
+      requests:
+        cpu: 700m
+        memory: 512Mi
+      limits:
+        cpu: 1250m
+        memory: 1024Mi    
+    command:
+      - sleep
+      - "6.048e+8"
