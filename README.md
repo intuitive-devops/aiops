@@ -12,6 +12,8 @@ The compendium of resources for docker-based AiOps.
 
 * How is the whirl mitigating behaviour?
 
+* How is the runtime designed to function?
+
 ### The deployment initiative
 
 * docker login -u myner -p otSS//TuMugkvp7j+hktuzLY0MpS2IaqFTm7jydc4Q+ACRAJN5BB aiops.azurecr.io
