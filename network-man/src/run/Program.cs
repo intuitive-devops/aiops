@@ -13,8 +13,6 @@ namespace run
 
         static void Main(string[] args)
         {
-
-
             // rangeA.Begin is "192.168.0.0", and rangeA.End is "192.168.0.255".
             RangeA = new IPAddressRange();
             var rangeA = IPAddressRange.Parse("172.22.0.0/18");
