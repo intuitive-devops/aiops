@@ -1,4 +1,4 @@
-FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
+FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 WORKDIR /source
 
 # Copy the *.csproj files.
@@ -15,7 +15,7 @@ RUN dotnet restore ./matrix.csproj
 RUN dotnet publish ./matrix.csproj -c debug -o /matrix --no-restore
 
 # Final stage/image
-FROM mcr.microsoft.com/dotnet/runtime:6.0
+FROM mcr.microsoft.com/dotnet/runtime:8.0
 #WORKDIR /matrix
 #COPY --from=build /matrix .
 #VOLUME [ "/config" ]
