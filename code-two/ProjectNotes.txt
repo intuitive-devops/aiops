@@ -26,5 +26,7 @@ Project Notes for Ai-Ops demo at DUO
     1222: I see the task in config was not implemented. The whirl seems to be running nevertheless.
 04.07.2024
     1131: Having a look, what can I see?
+20.08.2024
+    951: With huggable the key to writing positive code is to focus runtime around the whirl and get a base to build upon.
     
     
