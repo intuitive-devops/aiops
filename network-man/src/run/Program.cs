@@ -7,7 +7,6 @@ namespace run
 {
     internal class Program
     {
-
         static IPAddressRange RangeA { get; set; }
         static IPAddressRange RangeB { get; set; }
 
