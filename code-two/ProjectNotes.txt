@@ -29,5 +29,6 @@ Project Notes for Ai-Ops demo at DUO
 20.08.2024
     951: With huggable the key to writing positive code is to focus runtime around the whirl and get a base to build upon.
     1021: Crux lies circumstance of the agent.
-    
+26.08.2024
+    1148: Noting presence.
     
