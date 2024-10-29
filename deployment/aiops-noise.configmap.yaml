@@ -5,4 +5,4 @@ metadata:
   name: 'aiops-noise-configmap'
 data:
     APP_ENV: "acceptance"
-    NODE_ENV: "production"
+    NODE_ENV: "acceptance"
