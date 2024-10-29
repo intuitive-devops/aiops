@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: Pod
 metadata:
-  name: devmachine
+  name: diagnostics
 spec:
   restartPolicy: Always
   containers:
