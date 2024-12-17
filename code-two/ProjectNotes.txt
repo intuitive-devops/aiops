@@ -40,4 +40,5 @@ Project Notes for Ai-Ops demo at DUO
     1559: Reliance on framework library needs to be removed.
     1610: Fix by adding namespace. Builds.
     1848: Reintroduced the logs files - to run and bph.
+    1903: Image build is stable. Now the focus can be on true functionality.
     
