@@ -16,4 +16,4 @@ docker push mcxxx.acr.io
 
 =====
 
-podman build --tag aiops:20241217 /home/cartheur/ame/aiventure/aiventure-github/cartheur-research/aiventure-aiops/code-two
+podman build --force-rm --tag aiops:20241217 /home/cartheur/ame/aiventure/aiventure-github/cartheur-research/aiventure-aiops/code-two
