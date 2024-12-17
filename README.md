@@ -1,8 +1,10 @@
 # aiops
 
-The compendium of resources for docker-based AiOps.
+The compendium of resources for podman-based AiOps. A living project designed to encompass [ideal](https://github.com/cartheur/ideal) and its [construct](https://github.com/cartheur/ideal-forth).
 
 ### Open initiatives
+
+_Smoking barrels_
 
 * Next step is to check on the deployment.
 * Where is the metrical data from Prometheus?
@@ -10,11 +12,6 @@ The compendium of resources for docker-based AiOps.
 * Where is the decision tree being contemplated?
 * Where is the decision tree being executed?
 
+_Bonus round_
+
 * How is the whirl mitigating behaviour?
-
-* How is the runtime designed to function?
-
-### The deployment initiative
-
-* docker login -u myner -p otSS//TuMugkvp7j+hktuzLY0MpS2IaqFTm7jydc4Q+ACRAJN5BB aiops.azurecr.io
-* docker tag network-noise:latest aiops.azurecr.io/network-noise:latest
