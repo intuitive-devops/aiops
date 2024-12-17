@@ -1,6 +1,7 @@
 # aiops
 
-The compendium of resources for podman-based AiOps. A living project designed to encompass [ideal](https://github.com/cartheur/ideal) and its [construct](https://github.com/cartheur/ideal-forth).
+* A compendium of resources for podman-based AiOps, wrapping prometheus.
+* A living project designed to encompass [ideal](https://github.com/cartheur/ideal) and its [construct](https://github.com/cartheur/ideal-forth).
 
 ### Open initiatives
 
