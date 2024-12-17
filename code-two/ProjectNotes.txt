@@ -35,4 +35,5 @@ Project Notes for Ai-Ops demo at DUO
     1148: An active project from now.
 17.12.2024
     1440: To writ: This is not possible to demonstrate if no public internet connection.
-    
+    1441: Development to continue on an arm64 machine.
+    1442: What role can copilot play?
