@@ -1,0 +1,11 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<root>
+  <item name="trainingData" value="sinusoid"/>
+  <item name="iterations" value="200"/>
+  <item name="momentum" value="0"/>
+  <item name="learningRate" value="0.1"/>
+  <item name="sigmoidAlpha" value="2.0"/>
+  <item name="windowSize" value="5"/>
+  <item name="predictionSize" value="7"/>
+  <item name="logfile" value="logs"/>
+</root>
