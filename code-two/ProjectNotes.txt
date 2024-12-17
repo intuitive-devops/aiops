@@ -39,3 +39,5 @@ Project Notes for Ai-Ops demo at DUO
     1442: What role can copilot play?
     1559: Reliance on framework library needs to be removed.
     1610: Fix by adding namespace. Builds.
+    1848: Reintroduced the logs files - to run and bph.
+    
