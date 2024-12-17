@@ -10,7 +10,7 @@ COPY ./run .
 
 # Copy the folders needed to run the application.
 COPY ./run/config /bph/config/
-#COPY ./run/logs /bph/logs/
+COPY ./run/logs /bph/logs/
 
 # Copy and publish the application and its libraries.
 COPY . .
