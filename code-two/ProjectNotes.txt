@@ -42,3 +42,4 @@ Project Notes for Ai-Ops demo at DUO
     1848: Reintroduced the logs files - to run and bph.
     1903: Image build is stable. Now the focus can be on true functionality.
     2109: Have gotten the prometheus net project building and in sdk9.0.
+    2128: Brought-in a prometheus container, stock. Next to figure what aiops should consume.
