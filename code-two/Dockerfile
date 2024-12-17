@@ -21,8 +21,8 @@ RUN dotnet publish ./run/run.csproj -c debug -o /bph --no-restore
 FROM mcr.microsoft.com/dotnet/runtime:9.0
 WORKDIR /bph
 COPY --from=build /bph .
-#VOLUME [ "/config" ]
-#COPY ./config/Settings.xml -v /config/
+VOLUME [ "/config" ]
+COPY ./config/Settings.xml -v /config/
 ENV DOTNET_AttachStdout=1
 ENV DOTNET DOTNET_CLI_TELEMETRY_OPTOUT=1
 ENTRYPOINT ["dotnet", "run.dll"]
