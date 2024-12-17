@@ -5,8 +5,8 @@
   </ItemGroup>
 
   <PropertyGroup>
-    <AssemblyVersion>2.1.5</AssemblyVersion>
-    <TargetFramework>net8.0</TargetFramework>
+    <AssemblyVersion>1.0.0</AssemblyVersion>
+    <TargetFramework>net9.0</TargetFramework>
   </PropertyGroup>
 
 </Project>
