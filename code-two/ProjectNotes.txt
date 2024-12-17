@@ -33,3 +33,6 @@ Project Notes for Ai-Ops demo at DUO
     1148: Noting presence.
 29.10.2024
     1148: An active project from now.
+17.12.2024
+    1440: To writ: This is not possible to demonstrate if no public internet connection.
+    
