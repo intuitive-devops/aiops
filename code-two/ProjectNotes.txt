@@ -46,4 +46,5 @@ Project Notes for Ai-Ops demo at DUO
     2139: Last item was to check the volume and not exactly working. Next time.
 18.12.2024
     942: Here at it, but this is not today.
-    
+07.01.2025
+    1121: This is work that begins today.
