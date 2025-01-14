@@ -51,3 +51,5 @@ Project Notes for Ai-Ops demo at DUO
     1629: White paper is completed, thanks to Grok.
 08.01.2025
     1742: Fielding the document with ex-customers to see if I an get a bite.
+14.01.2025
+    1147: Fielding well. Now to demo.
