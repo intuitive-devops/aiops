@@ -4,3 +4,7 @@
 * `kubectl exec -it diagnostics -n aiops -- bash`
 
 More.
+
+podman run -it --rm
+
+podman run --name pdm-nginx -p 8080:80 nginx
