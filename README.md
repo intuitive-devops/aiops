@@ -20,3 +20,13 @@ _Smoking barrels_
 _Bonus round_
 
 * How is the whirl mitigating behaviour?
+
+### What I owe
+
+* --> M: What is the snuff?
+1. A price list of AiOps and,
+2. A document explaining the _three-product_ combination
+    - aiops
+    - islp
+    - ideal running an energy-efficient data-center
+3. Follow-up document to first aiops, to explain in more plain language
