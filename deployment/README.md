@@ -1,19 +1,27 @@
-## Launching containers to a kind k8s
+## Podman Desktop Kubernetes (kind-compatible)
 
-* `kubectl apply -f diagnostics.yaml -n aiops`
-* `kubectl exec -it diagnostics -n aiops -- bash`
+Use this repo with a local Kubernetes cluster from Podman Desktop.
 
-More.
+### 1) Verify cluster context
 
-podman run -it --rm
+- `kubectl config current-context`
+- `kubectl get nodes`
 
-podman run --name pdm-nginx -p 8080:80 nginx
+### 2) Deploy AiOps namespace and baseline workloads
 
-`kubectl --namespace monitoring get pods -l "release=kube-prometheus-stack"`
+- `kubectl create namespace aiops --dry-run=client -o yaml | kubectl apply -f -`
+- `kubectl apply -f aiops-noise.configmap.yaml`
+- `kubectl apply -f aiops-level-1.deployment.yaml`
+- `kubectl apply -f aiops-level-1.service.yaml`
+- `kubectl apply -f diagnostics.yaml -n aiops`
+- `kubectl get pods -n aiops`
 
-`kubectl port-forward -n monitoring svc/kube-prometheus-stack-prometheus 9090:9090`
+### 3) Optional monitoring commands
 
-kubectl port-forward svc/kube-prometheus-stack-prometheus -n monitoring 9090:9090 --address=0.0.0.0 &
-kubectl port-forward svc/kube-prometheus-stack-grafana -n monitoring 31000:80 --address=0.0.0.0 &
+- `kubectl --namespace monitoring get pods -l "release=kube-prometheus-stack"`
+- `kubectl port-forward -n monitoring svc/kube-prometheus-stack-prometheus 9090:9090`
+- `kubectl port-forward -n monitoring svc/kube-prometheus-stack-grafana 31000:80`
 
-podman run --name prometheus -d -p 127.0.0.1:9090:9090 prom/prometheus
+### 4) Cleanup
+
+- `kubectl delete namespace aiops`

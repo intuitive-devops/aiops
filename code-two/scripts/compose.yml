@@ -42,5 +42,5 @@ services:
     image: debian-bazel:latest
     container_name: controller
     volumes:
-    - /var/run/docker.sock:/var/run/docker.sock docker
+    - /var/run/docker.sock:/var/run/docker.sock
     

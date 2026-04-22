@@ -2,7 +2,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\bph\bph.csproj" />
-    <ProjectReference Include="..\encog\encog.csproj" />
 
   </ItemGroup>
 

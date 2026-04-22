@@ -1,4 +1,4 @@
-docker-compose up
+podman compose -f compose.yml up
 
 Query commands of interest to the curiosity-problem
 
