@@ -1,11 +1,20 @@
 using System.Globalization;
+using System.Net.Http.Headers;
 using System.Text;
 using System.Text.Json;
+using System.Threading;
 
 var builder = WebApplication.CreateBuilder(args);
 var app = builder.Build();
 
 var logPath = ResolveDecisionLogPath();
+var alertsLogPath = ResolveAlertsLogPath(logPath);
+var slackWebhookUrl = Environment.GetEnvironmentVariable("AIOPS_SLACK_WEBHOOK_URL");
+var httpClient = new HttpClient();
+long alertsReceivedTotal = 0;
+long alertsForwardedTotal = 0;
+long alertsForwardFailureTotal = 0;
+long replayTriggeredTotal = 0;
 
 app.MapGet("/health", () => Results.Ok(new
 {
@@ -47,10 +56,82 @@ app.MapGet("/api/decisions", (int? limit) =>
     });
 });
 
+app.MapGet("/api/replay", (int? cycles) =>
+{
+    var replayCycles = Math.Clamp(cycles ?? 1, 1, 10);
+    var runId = $"replay-{DateTimeOffset.UtcNow:yyyyMMddHHmmss}";
+    AppendReplayEntries(logPath, runId, replayCycles);
+    Interlocked.Add(ref replayTriggeredTotal, replayCycles);
+
+    return Results.Ok(new
+    {
+        status = "replay_triggered",
+        runId,
+        cycles = replayCycles,
+        decisionLog = logPath
+    });
+});
+
+app.MapPost("/api/alerts", async (HttpRequest request) =>
+{
+    using var reader = new StreamReader(request.Body);
+    var payload = await reader.ReadToEndAsync();
+    var summary = SummarizeAlertPayload(payload);
+    var now = DateTimeOffset.UtcNow;
+
+    var line = JsonSerializer.Serialize(new
+    {
+        timestamp = now.ToString("O", CultureInfo.InvariantCulture),
+        summary.status,
+        summary.alertCount,
+        summary.severity,
+        summary.alertNames
+    });
+    AppendLine(alertsLogPath, line);
+    Interlocked.Increment(ref alertsReceivedTotal);
+
+    if (!string.IsNullOrWhiteSpace(slackWebhookUrl))
+    {
+        var slackText = $"bunnyhop alert [{summary.status}] severity={summary.severity} count={summary.alertCount} alerts={string.Join(",", summary.alertNames)}";
+        var slackPayload = JsonSerializer.Serialize(new { text = slackText });
+        using var content = new StringContent(slackPayload, Encoding.UTF8, "application/json");
+        content.Headers.ContentType = new MediaTypeHeaderValue("application/json");
+
+        try
+        {
+            var response = await httpClient.PostAsync(slackWebhookUrl, content);
+            if (response.IsSuccessStatusCode)
+            {
+                Interlocked.Increment(ref alertsForwardedTotal);
+            }
+            else
+            {
+                Interlocked.Increment(ref alertsForwardFailureTotal);
+            }
+        }
+        catch
+        {
+            Interlocked.Increment(ref alertsForwardFailureTotal);
+        }
+    }
+
+    return Results.Ok(new
+    {
+        status = "alert_received",
+        alertStatus = summary.status,
+        summary.alertCount
+    });
+});
+
 app.MapGet("/metrics", () =>
 {
     var entries = ReadEntries(logPath, 5000);
-    var text = BuildPrometheusMetrics(entries);
+    var text = BuildPrometheusMetrics(
+        entries,
+        Interlocked.Read(ref alertsReceivedTotal),
+        Interlocked.Read(ref alertsForwardedTotal),
+        Interlocked.Read(ref alertsForwardFailureTotal),
+        Interlocked.Read(ref replayTriggeredTotal));
     return Results.Text(text, "text/plain; version=0.0.4; charset=utf-8");
 });
 
@@ -78,6 +159,12 @@ static string ResolveDecisionLogPath()
     return !string.IsNullOrWhiteSpace(existing)
         ? existing
         : Path.GetFullPath(candidates[0]);
+}
+
+static string ResolveAlertsLogPath(string decisionLogPath)
+{
+    var directory = Path.GetDirectoryName(decisionLogPath) ?? AppContext.BaseDirectory;
+    return Path.Combine(directory, "alert-events.jsonl");
 }
 
 static List<DecisionLogEntry> ReadEntries(string path, int limit)
@@ -110,7 +197,97 @@ static DecisionLogEntry? TryParse(string line)
     }
 }
 
-static string BuildPrometheusMetrics(List<DecisionLogEntry> entries)
+static void AppendLine(string path, string line)
+{
+    var directory = Path.GetDirectoryName(path);
+    if (!string.IsNullOrWhiteSpace(directory))
+    {
+        Directory.CreateDirectory(directory);
+    }
+
+    File.AppendAllText(path, line + Environment.NewLine);
+}
+
+static void AppendReplayEntries(string logPath, string runId, int cycles)
+{
+    var template = new (string State, string Signal, string Decision, double Confidence, string Action)[]
+    {
+        ("Zero", "sequence_bootstrap", "Initialize baseline", 0.82, "begin_sequence"),
+        ("Zero", "stable_window", "Continue monitoring", 0.77, "continue_monitoring"),
+        ("One", "cpu_noise_sustained", "Anomaly detected", 0.91, "run_matrix_probe"),
+        ("Two", "probe_complete", "Agent activated", 0.88, "spawn_agent"),
+        ("Three", "agent_ready", "Mitigation prepared", 0.84, "build_mitigation_recommendation"),
+        ("Four", "recommendation_ready", "Publish recommendation", 0.86, "publish_decision")
+    };
+
+    for (var cycle = 0; cycle < cycles; cycle++)
+    {
+        foreach (var item in template)
+        {
+            var entry = new DecisionLogEntry
+            {
+                Timestamp = DateTimeOffset.UtcNow.ToString("O", CultureInfo.InvariantCulture),
+                Signal = item.Signal,
+                Decision = item.Decision,
+                Confidence = item.Confidence,
+                Action = item.Action,
+                State = item.State,
+                RunId = $"{runId}-{cycle + 1}"
+            };
+
+            AppendLine(logPath, JsonSerializer.Serialize(entry));
+        }
+    }
+}
+
+static (string status, int alertCount, string severity, List<string> alertNames) SummarizeAlertPayload(string payload)
+{
+    try
+    {
+        using var doc = JsonDocument.Parse(payload);
+        var root = doc.RootElement;
+        var status = root.TryGetProperty("status", out var statusEl) ? (statusEl.GetString() ?? "unknown") : "unknown";
+        var names = new List<string>();
+        var severity = "unknown";
+
+        if (root.TryGetProperty("alerts", out var alertsEl) && alertsEl.ValueKind == JsonValueKind.Array)
+        {
+            foreach (var alert in alertsEl.EnumerateArray())
+            {
+                if (alert.TryGetProperty("labels", out var labels) && labels.ValueKind == JsonValueKind.Object)
+                {
+                    if (labels.TryGetProperty("alertname", out var alertNameEl))
+                    {
+                        names.Add(alertNameEl.GetString() ?? "unknown");
+                    }
+
+                    if (severity == "unknown" && labels.TryGetProperty("severity", out var severityEl))
+                    {
+                        severity = severityEl.GetString() ?? "unknown";
+                    }
+                }
+            }
+        }
+
+        if (names.Count == 0)
+        {
+            names.Add("unknown");
+        }
+
+        return (status, names.Count, severity, names.Distinct(StringComparer.Ordinal).ToList());
+    }
+    catch
+    {
+        return ("unknown", 0, "unknown", new List<string> { "parse_error" });
+    }
+}
+
+static string BuildPrometheusMetrics(
+    List<DecisionLogEntry> entries,
+    long alertsReceivedTotal,
+    long alertsForwardedTotal,
+    long alertsForwardFailureTotal,
+    long replayTriggeredTotal)
 {
     var sb = new StringBuilder();
     sb.AppendLine("# HELP bunnyhop_decision_total Total number of bunnyhop decisions grouped by state/action/signal.");
@@ -199,6 +376,48 @@ static string BuildPrometheusMetrics(List<DecisionLogEntry> entries)
     sb.AppendLine("# TYPE bunnyhop_anomaly_active gauge");
     var anomalyActive = latest?.Signal == "cpu_noise_sustained" ? 1 : 0;
     sb.AppendLine("bunnyhop_anomaly_active " + anomalyActive.ToString(CultureInfo.InvariantCulture));
+
+    sb.AppendLine("# HELP bunnyhop_slo_risk_score Composite SLO risk score in range [0,1].");
+    sb.AppendLine("# TYPE bunnyhop_slo_risk_score gauge");
+    var latestConfidence = latest?.Confidence ?? 0.0;
+    var sloRisk = Math.Clamp((anomalyActive * 0.7) + ((1.0 - latestConfidence) * 0.3), 0.0, 1.0);
+    sb.AppendLine("bunnyhop_slo_risk_score " + sloRisk.ToString(CultureInfo.InvariantCulture));
+
+    sb.AppendLine("# HELP bunnyhop_recommended_action_code Encoded recommended action based on latest decision.");
+    sb.AppendLine("# TYPE bunnyhop_recommended_action_code gauge");
+    var actionCode = latest?.Action switch
+    {
+        "continue_monitoring" => 1,
+        "run_matrix_probe" => 2,
+        "spawn_agent" => 3,
+        "build_mitigation_recommendation" => 4,
+        "publish_decision" => 5,
+        "begin_sequence" => 6,
+        _ => 0
+    };
+    sb.AppendLine("bunnyhop_recommended_action_code " + actionCode.ToString(CultureInfo.InvariantCulture));
+
+    sb.AppendLine("# HELP bunnyhop_time_saved_minutes Estimated operator minutes saved by automated decisions.");
+    sb.AppendLine("# TYPE bunnyhop_time_saved_minutes gauge");
+    var decisionCount = entries.Count;
+    var timeSavedMinutes = decisionCount * 2.5;
+    sb.AppendLine("bunnyhop_time_saved_minutes " + timeSavedMinutes.ToString(CultureInfo.InvariantCulture));
+
+    sb.AppendLine("# HELP bunnyhop_replay_trigger_total Number of incident replay triggers.");
+    sb.AppendLine("# TYPE bunnyhop_replay_trigger_total counter");
+    sb.AppendLine("bunnyhop_replay_trigger_total " + replayTriggeredTotal.ToString(CultureInfo.InvariantCulture));
+
+    sb.AppendLine("# HELP bunnyhop_alerts_received_total Total alerts received from Alertmanager webhook.");
+    sb.AppendLine("# TYPE bunnyhop_alerts_received_total counter");
+    sb.AppendLine("bunnyhop_alerts_received_total " + alertsReceivedTotal.ToString(CultureInfo.InvariantCulture));
+
+    sb.AppendLine("# HELP bunnyhop_alerts_forwarded_total Total alert messages forwarded to Slack webhook.");
+    sb.AppendLine("# TYPE bunnyhop_alerts_forwarded_total counter");
+    sb.AppendLine("bunnyhop_alerts_forwarded_total " + alertsForwardedTotal.ToString(CultureInfo.InvariantCulture));
+
+    sb.AppendLine("# HELP bunnyhop_alerts_forward_failures_total Total Slack webhook forward failures.");
+    sb.AppendLine("# TYPE bunnyhop_alerts_forward_failures_total counter");
+    sb.AppendLine("bunnyhop_alerts_forward_failures_total " + alertsForwardFailureTotal.ToString(CultureInfo.InvariantCulture));
 
     return sb.ToString();
 }

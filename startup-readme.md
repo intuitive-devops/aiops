@@ -18,6 +18,7 @@ This document summarizes the implementation and startup analysis for the `bunnyh
   - prebuilt Grafana dashboard (`bunnyhop aiops overview`)
   - dashboard auto-import ConfigMap
   - in-cluster demo API deployment for metrics (`deployment/monitoring/bunnyhop-demo-api.deployment.yaml`)
+  - Alertmanager webhook path + bunnyhop Prometheus alert rules
 - Kubernetes integration test namespace handling fixed for both quoted/unquoted YAML namespace values.
 
 ## Startup sequence (local)
@@ -40,11 +41,16 @@ This document summarizes the implementation and startup analysis for the `bunnyh
 - Grafana is the primary customer-facing view (KPIs + mitigation story).
 - Kubernetes Dashboard is best used as an operator/health/troubleshooting view.
 - Prometheus scrapes demo API metrics from `192.168.49.2:8787/metrics` (host-network fallback for unstable local pod DNS/networking).
+- Incident replay trigger endpoint available at `/api/replay` for live demo flow.
+- Alert webhook endpoint available at `/api/alerts`, with optional Slack forward via `AIOPS_SLACK_WEBHOOK_URL`.
+  - configure cluster Slack forwarding with:
+  - `scripts/demo/configure-slack-webhook.sh 'https://hooks.slack.com/services/T000/B000/XXXX'`
 - Included dashboard panels:
   - Workload CPU Trend
   - Anomaly Window
   - Mitigation Decision Confidence
   - Decision Volume by State/Action
+  - Executive SLO Risk / Recommended Action / Confidence / Time Saved
 
 ## Minikube findings
 

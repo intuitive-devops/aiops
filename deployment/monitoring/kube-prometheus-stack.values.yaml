@@ -24,3 +24,57 @@ prometheus:
         static_configs:
           - targets:
               - 192.168.49.2:8787
+
+additionalPrometheusRulesMap:
+  bunnyhop-alerts:
+    groups:
+      - name: bunnyhop.demo.rules
+        rules:
+          - alert: BunnyhopAnomalyActive
+            expr: bunnyhop_anomaly_active > 0
+            for: 30s
+            labels:
+              severity: warning
+              service: bunnyhop
+            annotations:
+              summary: "bunnyhop anomaly window active"
+              description: "An anomaly signal is active for bunnyhop and mitigation should be reviewed."
+          - alert: BunnyhopSloRiskHigh
+            expr: bunnyhop_slo_risk_score > 0.70
+            for: 1m
+            labels:
+              severity: critical
+              service: bunnyhop
+            annotations:
+              summary: "bunnyhop SLO risk is high"
+              description: "Composite SLO risk score exceeded 0.70."
+          - alert: BunnyhopReplayBurst
+            expr: increase(bunnyhop_replay_trigger_total[5m]) > 0
+            for: 10s
+            labels:
+              severity: info
+              service: bunnyhop
+            annotations:
+              summary: "bunnyhop incident replay triggered"
+              description: "Incident replay was triggered in the last 5 minutes."
+
+alertmanager:
+  config:
+    global:
+      resolve_timeout: 5m
+    route:
+      group_by: ['alertname', 'severity']
+      group_wait: 10s
+      group_interval: 1m
+      repeat_interval: 30m
+      receiver: bunnyhop-webhook
+      routes:
+        - receiver: 'null'
+          matchers:
+            - alertname = "Watchdog"
+    receivers:
+      - name: 'null'
+      - name: bunnyhop-webhook
+        webhook_configs:
+          - url: http://192.168.49.2:8787/api/alerts
+            send_resolved: true

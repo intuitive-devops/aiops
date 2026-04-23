@@ -229,6 +229,235 @@ data:
           ],
           "title": "Decision Volume By State/Action",
           "type": "timeseries"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          },
+          "fieldConfig": {
+            "defaults": {
+              "max": 1,
+              "min": 0,
+              "unit": "percentunit",
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green",
+                    "value": null
+                  },
+                  {
+                    "color": "orange",
+                    "value": 0.5
+                  },
+                  {
+                    "color": "red",
+                    "value": 0.7
+                  }
+                ]
+              }
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 6,
+            "w": 6,
+            "x": 0,
+            "y": 16
+          },
+          "id": 5,
+          "options": {
+            "colorMode": "background",
+            "graphMode": "none",
+            "justifyMode": "center",
+            "orientation": "auto",
+            "reduceOptions": {
+              "calcs": [
+                "lastNotNull"
+              ],
+              "fields": "",
+              "values": false
+            },
+            "textMode": "value"
+          },
+          "targets": [
+            {
+              "expr": "bunnyhop_slo_risk_score",
+              "refId": "A"
+            }
+          ],
+          "title": "Executive SLO Risk",
+          "type": "stat"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          },
+          "fieldConfig": {
+            "defaults": {
+              "mappings": [
+                {
+                  "options": {
+                    "0": {
+                      "text": "Unknown"
+                    },
+                    "1": {
+                      "text": "Continue Monitoring"
+                    },
+                    "2": {
+                      "text": "Run Matrix Probe"
+                    },
+                    "3": {
+                      "text": "Spawn Agent"
+                    },
+                    "4": {
+                      "text": "Build Recommendation"
+                    },
+                    "5": {
+                      "text": "Publish Decision"
+                    },
+                    "6": {
+                      "text": "Begin Sequence"
+                    }
+                  },
+                  "type": "value"
+                }
+              ]
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 6,
+            "w": 6,
+            "x": 6,
+            "y": 16
+          },
+          "id": 6,
+          "options": {
+            "colorMode": "value",
+            "graphMode": "none",
+            "justifyMode": "center",
+            "orientation": "auto",
+            "reduceOptions": {
+              "calcs": [
+                "lastNotNull"
+              ],
+              "fields": "",
+              "values": false
+            },
+            "textMode": "value"
+          },
+          "targets": [
+            {
+              "expr": "bunnyhop_recommended_action_code",
+              "refId": "A"
+            }
+          ],
+          "title": "Executive Recommended Action",
+          "type": "stat"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          },
+          "fieldConfig": {
+            "defaults": {
+              "decimals": 2,
+              "max": 1,
+              "min": 0,
+              "unit": "percentunit"
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 6,
+            "w": 6,
+            "x": 12,
+            "y": 16
+          },
+          "id": 7,
+          "options": {
+            "colorMode": "value",
+            "graphMode": "none",
+            "justifyMode": "center",
+            "orientation": "auto",
+            "reduceOptions": {
+              "calcs": [
+                "lastNotNull"
+              ],
+              "fields": "",
+              "values": false
+            },
+            "textMode": "value"
+          },
+          "targets": [
+            {
+              "expr": "bunnyhop_latest_decision_confidence{state=\"Four\"}",
+              "refId": "A"
+            }
+          ],
+          "title": "Executive Confidence",
+          "type": "stat"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          },
+          "fieldConfig": {
+            "defaults": {
+              "decimals": 0,
+              "unit": "m"
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 6,
+            "w": 6,
+            "x": 18,
+            "y": 16
+          },
+          "id": 8,
+          "options": {
+            "colorMode": "value",
+            "graphMode": "none",
+            "justifyMode": "center",
+            "orientation": "auto",
+            "reduceOptions": {
+              "calcs": [
+                "lastNotNull"
+              ],
+              "fields": "",
+              "values": false
+            },
+            "textMode": "value"
+          },
+          "targets": [
+            {
+              "expr": "bunnyhop_time_saved_minutes",
+              "refId": "A"
+            }
+          ],
+          "title": "Executive Time Saved",
+          "type": "stat"
+        },
+        {
+          "gridPos": {
+            "h": 4,
+            "w": 24,
+            "x": 0,
+            "y": 22
+          },
+          "id": 9,
+          "options": {
+            "content": "<div style=\"font-size:18px;padding:8px 0\"><a href=\"http://192.168.49.2:8787/api/replay?cycles=1\" target=\"_blank\">Trigger Incident Replay</a></div><div>Use this during demos to simulate an incident and watch metrics + alerts move.</div>",
+            "mode": "html"
+          },
+          "title": "Incident Replay Trigger",
+          "type": "text"
         }
       ],
       "refresh": "10s",
@@ -237,7 +466,8 @@ data:
       "tags": [
         "bunnyhop",
         "aiops",
-        "demo"
+        "demo",
+        "executive"
       ],
       "templating": {
         "list": [
@@ -269,6 +499,6 @@ data:
       "timezone": "",
       "title": "bunnyhop aiops overview",
       "uid": "bunnyhop-aiops-overview",
-      "version": 1,
+      "version": 2,
       "weekStart": ""
     }

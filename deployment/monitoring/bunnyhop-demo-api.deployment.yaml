@@ -7,6 +7,8 @@ metadata:
     app: bunnyhop-demo-api
 spec:
   replicas: 1
+  strategy:
+    type: Recreate
   selector:
     matchLabels:
       app: bunnyhop-demo-api
@@ -29,6 +31,12 @@ spec:
               value: http://0.0.0.0:8787
             - name: DOTNET_USE_POLLING_FILE_WATCHER
               value: "1"
+            - name: AIOPS_SLACK_WEBHOOK_URL
+              valueFrom:
+                secretKeyRef:
+                  name: bunnyhop-secrets
+                  key: slack_webhook_url
+                  optional: true
           resources:
             requests:
               cpu: 50m
