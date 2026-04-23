@@ -19,7 +19,8 @@ spec:
     spec:
       # Bypass broken pod-to-pod networking on some local podman/minikube setups.
       hostNetwork: true
-      dnsPolicy: ClusterFirstWithHostNet
+      # Use node DNS resolver (not cluster DNS) so external webhooks like Slack resolve reliably.
+      dnsPolicy: Default
       containers:
         - name: bunnyhop-demo-api
           image: bunnyhop/demo-api:local
