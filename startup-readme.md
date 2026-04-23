@@ -67,6 +67,18 @@ This document summarizes the implementation and startup analysis for the `bunnyh
   - `kubectl -n monitoring exec prometheus-kube-prometheus-stack-prometheus-0 -c prometheus -- wget -qO- 'http://127.0.0.1:9090/api/v1/query?query=up%7Bjob%3D%22bunnyhop-demo-api%22%7D'`
   - `kubectl -n monitoring exec prometheus-kube-prometheus-stack-prometheus-0 -c prometheus -- wget -qO- 'http://127.0.0.1:9090/api/v1/query?query=sum%20by%20(state%2Caction)%20(bunnyhop_decision_total)'`
 
+## Troubleshooting Grafana datasource 400 errors
+
+- Symptom: Grafana dashboard opens, but panel requests fail and Grafana logs show `POST /api/ds/query status=400`.
+- Observed root cause in this environment: Grafana pod cannot reliably resolve or reach the in-cluster Prometheus `ClusterIP` service.
+- Implemented mitigation:
+  - expose Prometheus service as NodePort `30090`
+  - configure Grafana datasource URL to `http://192.168.49.2:30090/`
+- Verification commands:
+  - `kubectl -n monitoring get svc kube-prometheus-stack-prometheus`
+  - `kubectl -n monitoring get configmap kube-prometheus-stack-grafana-datasource -o yaml | rg 'url:'`
+  - `kubectl -n monitoring exec deploy/kube-prometheus-stack-grafana -c grafana -- wget -qO- --timeout=5 http://192.168.49.2:30090/-/ready`
+
 ## Validation summary
 
 - `dotnet build code-two/demo-api/demo-api.csproj` passed.

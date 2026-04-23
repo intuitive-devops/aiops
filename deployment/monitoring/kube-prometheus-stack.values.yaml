@@ -6,8 +6,16 @@ grafana:
       label: grafana_dashboard
       labelValue: "1"
       searchNamespace: ALL
+    datasources:
+      # Local podman/minikube can have flaky pod DNS/pod-to-pod networking.
+      # Route Grafana->Prometheus through node IP + NodePort as a stable path.
+      url: http://192.168.49.2:30090/
 
 prometheus:
+  service:
+    type: NodePort
+    nodePort: 30090
+    reloaderWebNodePort: 30091
   prometheusSpec:
     additionalScrapeConfigs:
       - job_name: bunnyhop-demo-api
