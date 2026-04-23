@@ -21,6 +21,8 @@ Use this repo with a local Kubernetes cluster from Podman Desktop.
 - `kubectl --namespace monitoring get pods -l "release=kube-prometheus-stack"`
 - `kubectl port-forward -n monitoring svc/kube-prometheus-stack-prometheus 9090:9090`
 - `kubectl port-forward -n monitoring svc/kube-prometheus-stack-grafana 31000:80`
+- `scripts/demo/setup-monitoring.sh`
+- `scripts/demo/open-monitoring.sh`
 
 ### 4) Cleanup
 

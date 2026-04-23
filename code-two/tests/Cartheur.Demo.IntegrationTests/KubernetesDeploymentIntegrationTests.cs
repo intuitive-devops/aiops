@@ -22,10 +22,12 @@ public class KubernetesDeploymentIntegrationTests
 
         try
         {
+            var namespaceRewriteScript = $"awk -v ns={namespaceName} '/^[[:space:]]*namespace:[[:space:]]*/{{$0=\"  namespace: \" ns}}1'";
+
             Run($"kubectl create namespace {namespaceName} --dry-run=client -o yaml | kubectl apply -f -", repoRoot);
-            Run($"sed 's/namespace: aiops/namespace: {namespaceName}/g' {Path.Combine(deploymentDir, "aiops-noise.configmap.yaml")} | kubectl apply -f -", repoRoot);
-            Run($"sed 's/namespace: aiops/namespace: {namespaceName}/g' {Path.Combine(deploymentDir, "aiops-level-1.deployment.yaml")} | kubectl apply -f -", repoRoot);
-            Run($"sed 's/namespace: aiops/namespace: {namespaceName}/g' {Path.Combine(deploymentDir, "aiops-level-1.service.yaml")} | kubectl apply -f -", repoRoot);
+            Run($"{namespaceRewriteScript} {Path.Combine(deploymentDir, "aiops-noise.configmap.yaml")} | kubectl apply -f -", repoRoot);
+            Run($"{namespaceRewriteScript} {Path.Combine(deploymentDir, "aiops-level-1.deployment.yaml")} | kubectl apply -f -", repoRoot);
+            Run($"{namespaceRewriteScript} {Path.Combine(deploymentDir, "aiops-level-1.service.yaml")} | kubectl apply -f -", repoRoot);
             Run($"kubectl apply -f {Path.Combine(deploymentDir, "diagnostics.yaml")} -n {namespaceName}", repoRoot);
 
             var deployment = Run($"kubectl get deployment aipos-level-1 -n {namespaceName} -o name", repoRoot);

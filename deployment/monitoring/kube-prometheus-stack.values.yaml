@@ -1,0 +1,18 @@
+grafana:
+  adminPassword: bunnyhop
+  sidecar:
+    dashboards:
+      enabled: true
+      label: grafana_dashboard
+      labelValue: "1"
+      searchNamespace: ALL
+
+prometheus:
+  prometheusSpec:
+    additionalScrapeConfigs:
+      - job_name: bunnyhop-demo-api
+        metrics_path: /metrics
+        scrape_interval: 10s
+        static_configs:
+          - targets:
+              - host.minikube.internal:8787

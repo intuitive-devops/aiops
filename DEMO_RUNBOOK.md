@@ -72,6 +72,33 @@ Then verify publicly:
 curl -s https://bunnyhop.work/api/status
 ```
 
+## Step 5: Monitoring views
+
+Install monitoring stack:
+
+```bash
+scripts/demo/setup-monitoring.sh
+```
+
+Run demo API (for decision metrics scrape):
+
+```bash
+scripts/demo/run-demo-api.sh
+```
+
+Open Grafana, Prometheus, and Kubernetes Dashboard:
+
+```bash
+scripts/demo/open-monitoring.sh
+```
+
+Expected:
+- Grafana opens on `http://127.0.0.1:31000` (`admin` / `bunnyhop`).
+- Dashboard `bunnyhop aiops overview` shows:
+  - workload CPU trend
+  - anomaly window
+  - mitigation decision confidence
+
 ## Optional Kubernetes context checks
 
 ```bash

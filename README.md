@@ -61,6 +61,29 @@ scripts/cloudflare/run-tunnel.sh bunnyhop-demo
 
 Your DNS hostname (`bunnyhop.work`) will route to the local demo API while the tunnel is running.
 
+## Monitoring (Grafana + Kubernetes Dashboard)
+
+Bring up the monitoring stack in your minikube cluster:
+
+```bash
+scripts/demo/setup-monitoring.sh
+```
+
+In another shell, run the demo API so Prometheus can scrape decision metrics:
+
+```bash
+scripts/demo/run-demo-api.sh
+```
+
+Then open Grafana/Prometheus and Kubernetes Dashboard:
+
+```bash
+scripts/demo/open-monitoring.sh
+```
+
+Grafana dashboard included: `bunnyhop aiops overview`  
+Grafana login: `admin` / `bunnyhop`
+
 ## Demo tuning via env vars
 
 Override runtime behavior without editing XML:
