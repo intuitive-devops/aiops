@@ -13,7 +13,7 @@ This is enough to build a credible "v1 customer demo" if we package it around on
 
 ### Product name (working)
 
-- Cartheur AiOps Autopilot
+- bunnyhop aiops
 
 ### One-line value proposition
 

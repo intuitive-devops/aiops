@@ -1,32 +1,82 @@
-# aiops
+# bunnyhop aiops
 
-* A compendium of resources for podman-based AiOps, wrapping [prometheus](https://github.com/Cartheur-Research/prometheus-net) for dotnet.
-* A living project designed to encompass [ideal](https://github.com/cartheur/ideal) and its [construct](https://github.com/cartheur/ideal-forth) wherin its symbolic meaning is encapsulated as [sydrandria](https://github.com/Intuitive-DevOps/sydrandria).
+Customer-facing demo stack for an AiOps mitigation loop:
+1. Run deterministic sequence (`code-two/run`)
+2. Persist decision artifacts (`decision-log.jsonl`)
+3. Expose decision status over HTTP (`code-two/demo-api`)
+4. Publish the API securely via Cloudflare Tunnel + DNS
 
-### Demo mode
+## Prerequisites
 
-* [free](https://medium.com/techprimers/free-tiers-in-different-cloud-platforms-for-trying-out-kubernetes-2ccda3f296dc)
+- .NET SDK 9+
+- `kubectl` (optional for Kubernetes portion)
+- `cloudflared` (for public DNS exposure)
 
-### Open initiatives
+## Quickstart (local)
 
-_Smoking barrels_
+From repo root:
 
-* Next step is to check on the deployment.
-* Where is the metrical data from Prometheus?
-* Where is the data being analyzed?
-* Where is the decision tree being contemplated?
-* Where is the decision tree being executed?
+```bash
+scripts/demo/run-demo-sequence.sh
+```
 
-_Bonus round_
+This writes decision events to:
 
-* How is the whirl mitigating behaviour?
+`code-two/run/logs/decision-log.jsonl`
 
-### What I owe
+In a second shell, run the API:
 
-* --> M: What is the snuff?
-1. A price list of AiOps and,
-2. A document explaining the _three-product_ combination
-    - aiops
-    - islp
-    - ideal running an energy-efficient data-center
-3. Follow-up document to first aiops, to explain in more plain language
+```bash
+scripts/demo/run-demo-api.sh
+```
+
+API endpoints:
+- `GET /health`
+- `GET /api/status`
+- `GET /api/decisions?limit=25`
+
+Default local URL:
+
+`http://127.0.0.1:8787/api/status`
+
+## Cloudflare Tunnel + DNS
+
+1. Authenticate `cloudflared` once:
+
+```bash
+cloudflared tunnel login
+```
+
+2. Create/update tunnel config and DNS route:
+
+```bash
+scripts/cloudflare/setup-tunnel.sh bunnyhop-demo bunnyhop.work http://127.0.0.1:8787
+```
+
+3. Run the tunnel:
+
+```bash
+scripts/cloudflare/run-tunnel.sh bunnyhop-demo
+```
+
+Your DNS hostname (`bunnyhop.work`) will route to the local demo API while the tunnel is running.
+
+## Demo tuning via env vars
+
+Override runtime behavior without editing XML:
+
+```bash
+AIOPS_LIFETIME=2 AIOPS_DURATION=3000 AIOPS_MATRIXLOOPS=10000 scripts/demo/run-demo-sequence.sh
+```
+
+Override log location:
+
+```bash
+AIOPS_DECISION_LOG=/tmp/decision-log.jsonl scripts/demo/run-demo-sequence.sh
+```
+
+## Legacy notes
+
+Original planning and delivery docs remain in:
+- `PRODUCT_DEMO_PLAN.md`
+- `DEMO_RUNBOOK.md`

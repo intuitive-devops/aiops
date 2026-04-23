@@ -1,11 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Threading;
 using Bph;
 using Boagaphish.Settings;
 using System.IO;
 using Boagaphish;
 using System.Xml;
+using System.Collections.Generic;
+using System.Globalization;
+using System.Linq;
 
 namespace Cartheur.Demo
 {
@@ -14,68 +16,50 @@ namespace Cartheur.Demo
         static XmlDocument _document;
         const string FileType = ".xml";
         static System.Timers.Timer _whirlTimer;
-        //static List<string> Reports { get; set; }
         static double Lifetime { get; set; }
         static int Duration { get; set; }
         static int MatrixLoops { get; set; }
         static SettingsDictionary GlobalSettings;
         static string Task { get; set; }
+        static string DecisionLogPath { get; set; }
+        static string RunId { get; } = Guid.NewGuid().ToString("N");
+
         static void Initalize()
         {
             GlobalSettings = new SettingsDictionary();
             LoadSettings();
-            // Set program parameters.
-            Lifetime = Convert.ToDouble(GlobalSettings.GrabSetting("lifetime"));
-            Duration = Convert.ToInt32(GlobalSettings.GrabSetting("duration"));
-            Task = GlobalSettings.GrabSetting("task");
-            MatrixLoops = Convert.ToInt32(GlobalSettings.GrabSetting("matrixloops"));
+
+            Lifetime = ReadDouble("lifetime", 2);
+            Duration = ReadInt("duration", 3000);
+            Task = ReadString("task", "demo-sequence");
+            MatrixLoops = ReadInt("matrixloops", 10000);
+
+            var configuredLogLocation = ReadString("logfile", "logs");
+            DecisionLogPath = DecisionLog.ResolveLogPath(configuredLogLocation);
         }
+
         static void Main()
         {
-            // Begin.
             Initalize();
             var startTime = DateTime.Now;
-            //Reports = new List<string>();
-            // Begin.
+
             if (Task == "demo-sequence")
+            {
                 Console.WriteLine("Running the demonstration sequence...");
-            Console.WriteLine("Begin an agent sequence that lasts for " + Duration.ToString() + " milliseconds. The agent has a lifespan of " + Lifetime.ToString() + " minutes.");
-            // 1. Create a whirl that considers a period of interest (as a curiousity-problem)
+            }
+
+            Console.WriteLine("Begin an agent sequence that lasts for " + Duration.ToString() + " milliseconds. The agent has a lifespan of " + Lifetime.ToString(CultureInfo.InvariantCulture) + " minutes.");
+            Console.WriteLine("Decision log path: " + DecisionLogPath);
+
             BeginToRueTheWhirl(Duration, "Run demo");
             Thread.Sleep(Duration);
-            do
-            {   // PART A
-                // 2a. Have running a noisy container/pod with the default set of yaml values - DONE
-                // 2b. Have running a prometheus server that tracks the metrics-of-interest (using API C#) - DONE (docker-compose up) BUT NOT IN DEMO
-                // 2c. Format the output from the API appropriate for the soft agent (use API like LiveServer) -  DONE
-                // 3a. Create a (soft) agent that works with the statistical data, that leverages bph-indications-trends to analyze the patterns - DONE
-                // 3b. Structure a windows form around the behaviour of the algorithm on time-series data, the analysis, and the decision (pop-up accept/decline) -DONE
-                // 4. Sends the decision to the whirl. - DONE
-                // 5. Generates a yaml (docker) file and sends to the controller container (debian-bazel-dockercli). - TODO
 
-                // really, though...what is the target output for an aiops platform? Finishing on this step for this first demo.
+            while (((TimeSpan)(DateTime.Now - startTime)).TotalMinutes < Lifetime)
+            {
+                Thread.Sleep(Math.Max(250, Duration / 5));
+            }
 
-                // PART B - Manuipulate the container with new settings
-                // 6. Revive archived debian-bazel use its docker-cli (the controller container) - DONE
-                // 7. Run either "docker-in-docker" or remote daemon (using the latter) - DONE
-                //
-                // 6. Build a new container using the generated Dockerfile - POSSIBLE
-                // 7. Stop the old and run the replacement version - POSSIBLE
-                //
-                // 8. The agent controls the noisy container as: docker attach [OPTIONS] noisy - X
-                // 8a. Networking between the pods?
-                // 9. How to acually deploy the decision?
-                //
-                // FINIS
-                //
-                // Extra credit:
-                //      a. Spawns a copy of the first pod with different yaml values (Helm)
-                //      b. Sends a message to the agent to peform an analysis on the timespan of (prometheus) metrics
-                //      c. The whirl produces a report of what has happened in the curiousity period of interest
-                //
-
-            } while (((TimeSpan)(DateTime.Now - startTime)).TotalMinutes < Lifetime) ;
-
+            _whirlTimer?.Stop();
             Console.WriteLine("The agent has exhausted its time.");
             Thread.Sleep(2000);
             Environment.Exit(0);
@@ -86,70 +70,163 @@ namespace Cartheur.Demo
         {
             _whirlTimer = new System.Timers.Timer
             {
-                Interval = duration // Duration of time in each state (in ms)
+                Interval = duration
             };
             _whirlTimer.Elapsed += WhirlTimerElapsed;
-            _whirlTimer.Start(); // Start whirl-duration timer.
-            RueTheWhirl.CurrentState = "Zero"; // Start the whirl.
-            //Reports.Add(RueTheWhirl.ActionController()); 
-            Console.WriteLine(RueTheWhirl.ActionController('0')); // Set the action for the whirl.
+            _whirlTimer.Start();
+            RueTheWhirl.CurrentState = "Zero";
+
+            var decision = RueTheWhirl.ActionController('0');
+            Console.WriteLine(decision);
+            WriteDecision("Zero", decision);
         }
+
         public static void WhirlTimerElapsed(object sender, System.Timers.ElapsedEventArgs e)
         {
+            string nextState;
+            object actionArg;
+
             switch (RueTheWhirl.CurrentState)
             {
                 case "Zero":
-                    RueTheWhirl.CurrentState = "One";
-                    //Reports.Add(RueTheWhirl.ActionController());
-                    Console.WriteLine(RueTheWhirl.ActionController('0'));
+                    nextState = "One";
+                    actionArg = MatrixLoops;
                     break;
                 case "One":
-                    RueTheWhirl.CurrentState = "Two";
-                    //Reports.Add(RueTheWhirl.ActionController());
-                    Console.WriteLine(RueTheWhirl.ActionController(MatrixLoops));
+                    nextState = "Two";
+                    actionArg = '0';
                     break;
                 case "Two":
-                    RueTheWhirl.CurrentState = "Three";
-                    //Reports.Add(RueTheWhirl.ActionController());
-                    Console.WriteLine(RueTheWhirl.ActionController('0'));
+                    nextState = "Three";
+                    actionArg = '0';
                     break;
                 case "Three":
-                    RueTheWhirl.CurrentState = "Four";
-                    //Reports.Add(RueTheWhirl.ActionController());
-                    Console.WriteLine(RueTheWhirl.ActionController('0'));
+                    nextState = "Four";
+                    actionArg = '0';
                     break;
                 case "Four":
-                    RueTheWhirl.CurrentState = "Zero";
-                    //Reports.Add(RueTheWhirl.ActionController());
-                    Console.WriteLine(RueTheWhirl.ActionController('0'));
+                    nextState = "Zero";
+                    actionArg = '0';
                     break;
                 default:
-                    //Reports.Add("--------");
+                    nextState = "Zero";
+                    actionArg = '0';
                     break;
             }
-            if (RueTheWhirl.ActionController('0').Contains("Discover") | RueTheWhirl.ActionController('0') == "Discover the average value of a noisy container.")
+
+            RueTheWhirl.CurrentState = nextState;
+            var decision = RueTheWhirl.ActionController(actionArg);
+            Console.WriteLine(decision);
+            WriteDecision(nextState, decision);
+
+            if (decision == "Discover the average value of a noisy container.")
             {
-                // Sample the data of the Prometheus instance.
-                //SensorTemporalValueDifference();
-                // Process taxonomy.
-                //ProcessTaxonomy();
-                // Start as a find of a peek.
-                //PeekValue();
-                // Move toward equilibrium.
-                //IncrementLeft();
-
-
+                // Placeholder for sampling and taxonomy logic.
             }
         }
-
         #endregion
 
         #region Utilities
         public static void LoadSettings()
         {
-            var path = Path.Combine(Environment.CurrentDirectory, Path.Combine("config", "Settings.xml"));
-            GlobalSettings.LoadSettings(path);
+            var candidates = new[]
+            {
+                Path.Combine(Environment.CurrentDirectory, "config", "Settings.xml"),
+                Path.Combine(AppContext.BaseDirectory, "config", "Settings.xml"),
+                Path.Combine(AppContext.BaseDirectory, "..", "..", "..", "config", "Settings.xml")
+            };
+
+            var path = candidates.FirstOrDefault(File.Exists);
+            if (string.IsNullOrWhiteSpace(path))
+            {
+                throw new FileNotFoundException("Unable to find Settings.xml. Looked in: " + string.Join(", ", candidates));
+            }
+
+            GlobalSettings.LoadSettings(Path.GetFullPath(path));
         }
+
+        static int ReadInt(string settingName, int fallback)
+        {
+            var envName = "AIOPS_" + settingName.ToUpperInvariant();
+            var envValue = Environment.GetEnvironmentVariable(envName);
+            if (int.TryParse(envValue, out var envParsed))
+            {
+                return envParsed;
+            }
+
+            var configured = GlobalSettings.GrabSetting(settingName);
+            if (int.TryParse(configured, out var parsed))
+            {
+                return parsed;
+            }
+
+            return fallback;
+        }
+
+        static double ReadDouble(string settingName, double fallback)
+        {
+            var envName = "AIOPS_" + settingName.ToUpperInvariant();
+            var envValue = Environment.GetEnvironmentVariable(envName);
+            if (double.TryParse(envValue, NumberStyles.Float, CultureInfo.InvariantCulture, out var envParsed))
+            {
+                return envParsed;
+            }
+
+            var configured = GlobalSettings.GrabSetting(settingName);
+            if (double.TryParse(configured, NumberStyles.Float, CultureInfo.InvariantCulture, out var parsed))
+            {
+                return parsed;
+            }
+
+            return fallback;
+        }
+
+        static string ReadString(string settingName, string fallback)
+        {
+            var envName = "AIOPS_" + settingName.ToUpperInvariant();
+            var envValue = Environment.GetEnvironmentVariable(envName);
+            if (!string.IsNullOrWhiteSpace(envValue))
+            {
+                return envValue;
+            }
+
+            var configured = GlobalSettings.GrabSetting(settingName);
+            return string.IsNullOrWhiteSpace(configured) ? fallback : configured;
+        }
+
+        static void WriteDecision(string state, string decision)
+        {
+            var (signal, confidence, action) = BuildDecisionMetadata(state, decision);
+            DecisionLog.Write(DecisionLogPath, RunId, state, signal, decision, confidence, action);
+        }
+
+        static (string signal, double confidence, string action) BuildDecisionMetadata(string state, string decision)
+        {
+            if (state == "One")
+            {
+                return ("cpu_noise_sustained", 0.64, "run_matrix_probe");
+            }
+            if (state == "Two")
+            {
+                return ("probe_complete", 0.72, "spawn_agent");
+            }
+            if (state == "Three")
+            {
+                return ("agent_ready", 0.81, "build_mitigation_recommendation");
+            }
+            if (state == "Four")
+            {
+                return ("recommendation_ready", 0.88, "publish_decision");
+            }
+
+            if (decision.Contains("Resting", StringComparison.OrdinalIgnoreCase))
+            {
+                return ("stable_window", 0.55, "continue_monitoring");
+            }
+
+            return ("sequence_bootstrap", 0.60, "begin_sequence");
+        }
+
         private static string XPathValue(string xPath)
         {
             var node = _document.SelectSingleNode((xPath));
@@ -157,7 +234,6 @@ namespace Cartheur.Demo
                 Logging.WriteLog(@"Cannot find the specified node.", Logging.LogType.Error, Logging.LogCaller.AgentCore, "XPathValue");
             return node != null ? node.InnerText : "";
         }
-
         #endregion
     }
 }
