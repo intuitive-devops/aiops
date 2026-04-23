@@ -56,3 +56,8 @@ Project Notes for Ai-Ops demo at DUO
     8. Watch container go down and new one come up (docker engine)
 29.09.2022
     1517: It went fine. Demo accomplished.
+01.03.2025
+    1119: Next session, restricted for M-F work, begin right here.
+23.04.2026
+    1434: We are in the kube again.
+    
