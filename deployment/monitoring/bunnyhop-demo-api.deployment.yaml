@@ -1,0 +1,54 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: bunnyhop-demo-api
+  namespace: monitoring
+  labels:
+    app: bunnyhop-demo-api
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: bunnyhop-demo-api
+  template:
+    metadata:
+      labels:
+        app: bunnyhop-demo-api
+    spec:
+      # Bypass broken pod-to-pod networking on some local podman/minikube setups.
+      hostNetwork: true
+      dnsPolicy: ClusterFirstWithHostNet
+      containers:
+        - name: bunnyhop-demo-api
+          image: bunnyhop/demo-api:local
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8787
+          env:
+            - name: AIOPS_API_URLS
+              value: http://0.0.0.0:8787
+            - name: DOTNET_USE_POLLING_FILE_WATCHER
+              value: "1"
+          resources:
+            requests:
+              cpu: 50m
+              memory: 64Mi
+            limits:
+              cpu: 300m
+              memory: 256Mi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: bunnyhop-demo-api
+  namespace: monitoring
+  labels:
+    app: bunnyhop-demo-api
+spec:
+  selector:
+    app: bunnyhop-demo-api
+  ports:
+    - name: http
+      port: 8787
+      targetPort: 8787
+      protocol: TCP

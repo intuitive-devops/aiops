@@ -27,6 +27,9 @@ helm upgrade --install kube-prometheus-stack prometheus-community/kube-prometheu
 echo "[monitoring] Applying bunnyhop dashboard configmap..."
 kubectl apply -f deployment/monitoring/bunnyhop-grafana-dashboard.configmap.yaml
 
+echo "[monitoring] Building/deploying bunnyhop demo API in-cluster..."
+scripts/demo/deploy-demo-api-in-cluster.sh
+
 echo "[monitoring] Waiting for Grafana rollout..."
 kubectl -n monitoring rollout status deployment/kube-prometheus-stack-grafana --timeout=180s
 

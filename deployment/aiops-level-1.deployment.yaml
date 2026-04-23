@@ -22,13 +22,21 @@ spec:
           effect: NoSchedule
       containers:
         - name: network-noise
-          image: aiops.azurecr.io/network-noise:latest
+          image: busybox:1.36
           ports:
             - containerPort: 8080
           command:
-             - '--config'
-             - ./noise-config.json
+             - sh
+             - -c
+             - while true; do dd if=/dev/zero of=/dev/null bs=1M count=2; sleep 5; done
           imagePullPolicy: IfNotPresent
+          resources:
+            requests:
+              cpu: 50m
+              memory: 64Mi
+            limits:
+              cpu: 200m
+              memory: 128Mi
           envFrom:
             - configMapRef:
                 name: aiops-noise-configmap

@@ -116,13 +116,42 @@ static string BuildPrometheusMetrics(List<DecisionLogEntry> entries)
     sb.AppendLine("# HELP bunnyhop_decision_total Total number of bunnyhop decisions grouped by state/action/signal.");
     sb.AppendLine("# TYPE bunnyhop_decision_total counter");
 
+    var knownCombinations = new[]
+    {
+        new { State = "Zero", Action = "begin_sequence", Signal = "sequence_bootstrap" },
+        new { State = "Zero", Action = "continue_monitoring", Signal = "stable_window" },
+        new { State = "One", Action = "run_matrix_probe", Signal = "cpu_noise_sustained" },
+        new { State = "Two", Action = "spawn_agent", Signal = "probe_complete" },
+        new { State = "Three", Action = "build_mitigation_recommendation", Signal = "agent_ready" },
+        new { State = "Four", Action = "publish_decision", Signal = "recommendation_ready" }
+    };
+
     var grouped = entries
         .GroupBy(entry => new { entry.State, entry.Action, entry.Signal })
         .OrderBy(group => group.Key.State)
         .ThenBy(group => group.Key.Action)
         .ThenBy(group => group.Key.Signal);
 
-    foreach (var group in grouped)
+    var groupedLookup = grouped.ToDictionary(
+        group => $"{group.Key.State}|{group.Key.Action}|{group.Key.Signal}",
+        group => group.Count());
+
+    foreach (var combo in knownCombinations)
+    {
+        var key = $"{combo.State}|{combo.Action}|{combo.Signal}";
+        var count = groupedLookup.TryGetValue(key, out var existing) ? existing : 0;
+        sb.Append("bunnyhop_decision_total");
+        sb.Append("{state=\"").Append(EscapeLabelValue(combo.State)).Append("\",");
+        sb.Append("action=\"").Append(EscapeLabelValue(combo.Action)).Append("\",");
+        sb.Append("signal=\"").Append(EscapeLabelValue(combo.Signal)).Append("\"} ");
+        sb.AppendLine(count.ToString(CultureInfo.InvariantCulture));
+    }
+
+    foreach (var group in grouped.Where(group =>
+                 !knownCombinations.Any(combo =>
+                     combo.State == group.Key.State &&
+                     combo.Action == group.Key.Action &&
+                     combo.Signal == group.Key.Signal)))
     {
         sb.Append("bunnyhop_decision_total");
         sb.Append("{state=\"").Append(EscapeLabelValue(group.Key.State)).Append("\",");
@@ -133,14 +162,27 @@ static string BuildPrometheusMetrics(List<DecisionLogEntry> entries)
 
     sb.AppendLine("# HELP bunnyhop_latest_decision_confidence Latest confidence value observed for each whirl state.");
     sb.AppendLine("# TYPE bunnyhop_latest_decision_confidence gauge");
+
+    var knownStates = new[] { "Zero", "One", "Two", "Three", "Four" };
     var latestByState = entries
         .GroupBy(entry => entry.State)
-        .Select(group => group.OrderByDescending(entry => ParseTimestamp(entry.Timestamp)).First());
+        .ToDictionary(
+            group => group.Key,
+            group => group.OrderByDescending(entry => ParseTimestamp(entry.Timestamp)).First());
 
-    foreach (var entry in latestByState.OrderBy(entry => entry.State))
+    foreach (var state in knownStates)
     {
+        var confidence = latestByState.TryGetValue(state, out var latestEntry) ? latestEntry.Confidence : 0.0;
         sb.Append("bunnyhop_latest_decision_confidence");
-        sb.Append("{state=\"").Append(EscapeLabelValue(entry.State)).Append("\"} ");
+        sb.Append("{state=\"").Append(EscapeLabelValue(state)).Append("\"} ");
+        sb.AppendLine(confidence.ToString(CultureInfo.InvariantCulture));
+    }
+
+    foreach (var state in latestByState.Keys.Where(state => !knownStates.Contains(state, StringComparer.Ordinal)).OrderBy(state => state))
+    {
+        var entry = latestByState[state];
+        sb.Append("bunnyhop_latest_decision_confidence");
+        sb.Append("{state=\"").Append(EscapeLabelValue(state)).Append("\"} ");
         sb.AppendLine(entry.Confidence.ToString(CultureInfo.InvariantCulture));
     }
 

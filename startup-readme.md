@@ -17,6 +17,7 @@ This document summarizes the implementation and startup analysis for the `bunnyh
   - `kube-prometheus-stack` install values
   - prebuilt Grafana dashboard (`bunnyhop aiops overview`)
   - dashboard auto-import ConfigMap
+  - in-cluster demo API deployment for metrics (`deployment/monitoring/bunnyhop-demo-api.deployment.yaml`)
 - Kubernetes integration test namespace handling fixed for both quoted/unquoted YAML namespace values.
 
 ## Startup sequence (local)
@@ -26,13 +27,11 @@ This document summarizes the implementation and startup analysis for the `bunnyh
    - `kubectl get nodes`
 2. Run demo sequence:
    - `scripts/demo/run-demo-sequence.sh`
-3. Run demo API:
-   - `scripts/demo/run-demo-api.sh`
-4. Install monitoring stack:
+3. Install monitoring stack:
    - `scripts/demo/setup-monitoring.sh`
-5. Open monitoring endpoints:
+4. Open monitoring endpoints:
    - `scripts/demo/open-monitoring.sh`
-6. Optional public exposure:
+5. Optional public exposure:
    - `scripts/cloudflare/setup-tunnel.sh bunnyhop-demo bunnyhop.work http://127.0.0.1:8787`
    - `scripts/cloudflare/run-tunnel.sh bunnyhop-demo`
 
@@ -40,7 +39,7 @@ This document summarizes the implementation and startup analysis for the `bunnyh
 
 - Grafana is the primary customer-facing view (KPIs + mitigation story).
 - Kubernetes Dashboard is best used as an operator/health/troubleshooting view.
-- Prometheus scrapes the local demo API metrics from `host.minikube.internal:8787/metrics`.
+- Prometheus scrapes demo API metrics from `192.168.49.2:8787/metrics` (host-network fallback for unstable local pod DNS/networking).
 - Included dashboard panels:
   - Workload CPU Trend
   - Anomaly Window
@@ -54,6 +53,19 @@ This document summarizes the implementation and startup analysis for the `bunnyh
   - `minikube status` shows host/kubelet/apiserver `Running`
   - `kubectl get nodes` shows `minikube` in `Ready`
 - Integration test now passes against running minikube when `RUN_K8S_INTEGRATION=1`.
+
+## Troubleshooting no-data / high fan noise
+
+- Symptom: Grafana panels show "No data", Prometheus target is `DOWN`, and machine fan runs hot.
+- Observed root cause in this environment: pod-to-pod networking and cluster DNS intermittently timeout.
+- Implemented mitigation:
+  - deployed `bunnyhop-demo-api` with `hostNetwork: true`
+  - switched Prometheus target to node IP `192.168.49.2:8787`
+  - reduced synthetic CPU noise loop intensity in `deployment/aiops-level-1.deployment.yaml`
+- Quick verification commands:
+  - `kubectl get pods -A`
+  - `kubectl -n monitoring exec prometheus-kube-prometheus-stack-prometheus-0 -c prometheus -- wget -qO- 'http://127.0.0.1:9090/api/v1/query?query=up%7Bjob%3D%22bunnyhop-demo-api%22%7D'`
+  - `kubectl -n monitoring exec prometheus-kube-prometheus-stack-prometheus-0 -c prometheus -- wget -qO- 'http://127.0.0.1:9090/api/v1/query?query=sum%20by%20(state%2Caction)%20(bunnyhop_decision_total)'`
 
 ## Validation summary
 
